@@ -7,7 +7,7 @@
 * Pengpeng Ge
 * Rafael Bezerra
 
-The tasks that each member will be doing will still be defined as at this moment the system is still being modeled.
+The tasks that each member will be doing still need to be defined as at this moment the system is still being modeled.
 
 
 ##Proposal
@@ -21,4 +21,4 @@ The code will be tested on many standard patterns using a set of sentences. The 
 1. The regex correctness: the code shall parse the regex and inform if any error is encountered
 2. The search correctness: the code shall inform whether the pattern exists in the sentence or not.
 
-The code will also be benchmarked against the default regex library.
+The code will also be benchmarked against the default C++ regex library.
