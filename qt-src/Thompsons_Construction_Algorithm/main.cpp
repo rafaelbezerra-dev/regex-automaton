@@ -69,8 +69,9 @@ public:
 
 NFA concat(NFA a, NFA b) {
     NFA result;
-    result.set_vertex(a.get_vertex_count() + b.get_vertex_count());
-    int i;
+    int n_states = a.get_vertex_count() + b.get_vertex_count() - 1;
+    result.set_vertex(n_states);
+    uint32_t i;
     trans new_trans;
 
     for(i = 0; i < a.transitions.size(); i++) {
@@ -78,14 +79,16 @@ NFA concat(NFA a, NFA b) {
         result.set_transition(new_trans.vertex_from, new_trans.vertex_to, new_trans.trans_symbol);
     }
 
-    result.set_transition(a.get_final_state(), a.get_vertex_count(), '^');
+//    result.set_transition(a.get_final_state(), a.get_vertex_count(), '^');
+    new_trans = b.transitions.at(0);
+    result.set_transition(new_trans.vertex_from + i, new_trans.vertex_to + i, new_trans.trans_symbol);
 
-    for(i = 0; i < b.transitions.size(); i++) {
+    for(i = 1; i < b.transitions.size(); i++) {
         new_trans = b.transitions.at(i);
         result.set_transition(new_trans.vertex_from + a.get_vertex_count(), new_trans.vertex_to + a.get_vertex_count(), new_trans.trans_symbol);
     }
 
-    result.set_final_state(a.get_vertex_count() + b.get_vertex_count() - 1);
+    result.set_final_state(n_states - 1);
 
     return result;
 }
@@ -93,7 +96,7 @@ NFA concat(NFA a, NFA b) {
 
 NFA kleene(NFA a) {
     NFA result;
-    int i;
+    uint32_t i;
     trans new_trans;
 
     result.set_vertex(a.get_vertex_count() + 2);
