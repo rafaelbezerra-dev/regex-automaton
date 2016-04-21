@@ -71,7 +71,7 @@ NFA concat(NFA a, NFA b) {
     NFA result;
     int n_states = a.get_vertex_count() + b.get_vertex_count() - 1;
     result.set_vertex(n_states);
-    uint32_t i;
+    uint32_t i, j;
     trans new_trans;
 
     for(i = 0; i < a.transitions.size(); i++) {
@@ -80,12 +80,13 @@ NFA concat(NFA a, NFA b) {
     }
 
 //    result.set_transition(a.get_final_state(), a.get_vertex_count(), '^');
-    new_trans = b.transitions.at(0);
-    result.set_transition(new_trans.vertex_from + i, new_trans.vertex_to + i, new_trans.trans_symbol);
+//    new_trans = b.transitions.at(0);
+//    result.set_transition(new_trans.vertex_from + i, new_trans.vertex_to + i, new_trans.trans_symbol);
 
-    for(i = 1; i < b.transitions.size(); i++) {
-        new_trans = b.transitions.at(i);
-        result.set_transition(new_trans.vertex_from + a.get_vertex_count(), new_trans.vertex_to + a.get_vertex_count(), new_trans.trans_symbol);
+    for(j = 0; j < b.transitions.size(); j++) {
+        new_trans = b.transitions.at(j);
+        result.set_transition(new_trans.vertex_from + i, new_trans.vertex_to + i, new_trans.trans_symbol);
+//        result.set_transition(new_trans.vertex_from + a.get_vertex_count(), new_trans.vertex_to + a.get_vertex_count(), new_trans.trans_symbol);
     }
 
     result.set_final_state(n_states - 1);
