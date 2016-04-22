@@ -7,6 +7,8 @@
 #include<string>
 #include<set>
 #include<stack>
+#include <utility>
+
 
 using namespace std;
 
@@ -24,9 +26,7 @@ public:
     vector<trans> transitions;
     int final_state;
 
-    NFA() {
-
-    }
+    NFA() {}
 
     int get_vertex_count() {
         return vertex.size();
@@ -64,8 +64,6 @@ public:
         cout<<"\nThe final state is q"<<get_final_state()<<endl;
     }
 };
-
-
 
 NFA concat(NFA a, NFA b) {
     NFA result;
