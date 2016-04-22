@@ -9,11 +9,10 @@ def concat(left_nfa, right_nfa):
 
     res = NFA(state_list, n_states - 1)
 
-    i = 0
     for trans in left_nfa.transitions:
-        i += 1
         res.add_transition(trans.t_from, trans.t_to, trans.t_symbol)
 
+    i = left_nfa.count_states() - 1
     for trans in right_nfa.transitions:
         res.add_transition(trans.t_from + i, trans.t_to + i, trans.t_symbol)
     return res
@@ -31,7 +30,7 @@ def kleene_star(nfa):
 
     res.add_transition(0, 1, NFA.EPSILON)
     res.add_transition(0, n_states - 1, NFA.EPSILON)
-    res.add_transition(1, n_states - 2, NFA.EPSILON)
+    res.add_transition(n_states - 2, 1, NFA.EPSILON)
     res.add_transition(n_states - 2, n_states - 1, NFA.EPSILON)
 
     return res
@@ -47,20 +46,16 @@ def union(left_nfa, right_nfa):
     res = NFA(state_list, f_state)
 
     res.add_transition(0, 1, NFA.EPSILON)
-    i = 1
     for trans in left_nfa.transitions:
-        i += 1
         res.add_transition(trans.t_from + 1, trans.t_to + 1, trans.t_symbol)
+    i = left_nfa.count_states()
     res.add_transition(i, f_state, NFA.EPSILON)
 
     i += 1
-
     res.add_transition(0, i, NFA.EPSILON)
-    j = i
     for trans in right_nfa.transitions:
-        j += 1
         res.add_transition(trans.t_from + i, trans.t_to + i, trans.t_symbol)
-    res.add_transition(j, f_state, NFA.EPSILON)
+    res.add_transition(right_nfa.count_states() + i - 1, f_state, NFA.EPSILON)
     return res
 
 
@@ -124,11 +119,19 @@ def main():
     print '\nFor the regular expression segment [Or] : (a|b)'
     union(a, b).display()
 
-    print '\nExample : a.(a|b)'
+    print '\nFor the regular expression segment [Concatenation] : b.(a*).b'
+    concat(b, concat(kleene_star(a), b)).display()
+
+    print '\nFor the regular expression segment [Kleene Closure] : (a*)'
+
+    print '\nExample 1 : a.(a|b)'
     concat(a, union(a, b)).display()
 
     print '\nExample 2 : (a.(b|c))'
     re_to_nfa('(a.(b|c))').display()
+
+    print '\nExample 3 : (1.(0*).1)'
+    re_to_nfa('(1.(0*).1)').display()
 
 
 if __name__ == '__main__':
