@@ -19,9 +19,16 @@ class State:
 
 
 class NFA:
-    def __init__(self, states=[], final_state_index=0):
-        self.states = states
+    EPSILON = "<epsilon>"
+
+    def __init__(self, states=None, final_state_index=0, transitions=None):
+        # type: (List[State], int) -> NFA
+        self.states = states if states else []
         self.transitions = []
+        # self.transitions = transitions if transitions else []
+        if transitions:
+            for trans in transitions:
+                self.add_transition(trans.t_from, trans.t_to, trans.t_symbol)
         self.final_state_index = final_state_index
         self.set_final_state(final_state_index)
 
