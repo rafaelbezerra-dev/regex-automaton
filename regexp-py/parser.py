@@ -1,6 +1,5 @@
 from nfa_model import *
 
-
 def concat(left_nfa, right_nfa):
     n_states = left_nfa.count_states() + right_nfa.count_states() - 1
     state_list = []
@@ -90,48 +89,46 @@ def re_to_nfa(regexp):
                     op = operators.pop()
     return operands.pop()
 
-
 def main():
-    a = NFA()
-    b = NFA()
-
-    print '\nFor the regular expression segment : (a)'
-    a.add_state('q0')
-    a.add_state('q1')
-    a.add_transition(0, 1, 'a')
-    a.set_final_state(1)
-    a.display()
-
-    print '\nFor the regular expression segment : (b)'
-    b.add_state('q0')
-    b.add_state('q1')
-    b.add_transition(0, 1, 'b')
-    b.set_final_state(1)
-    b.display()
-
-    print '\nFor the regular expression segment [Concatenation] : (a.b)'
-    concat(a, b).display()
-
-    print '\nFor the regular expression segment [Kleene Closure] : (a*)'
-    a_star = kleene_star(a)
-    a_star.display()
-
-    print '\nFor the regular expression segment [Or] : (a|b)'
-    union(a, b).display()
-
-    print '\nFor the regular expression segment [Concatenation] : b.(a*).b'
-    concat(b, concat(kleene_star(a), b)).display()
-
-    print '\nFor the regular expression segment [Kleene Closure] : (a*)'
-
-    print '\nExample 1 : a.(a|b)'
-    concat(a, union(a, b)).display()
+    # a = NFA()
+    # b = NFA()
+    #
+    # print '\nFor the regular expression segment : (a)'
+    # a.add_state('q0')
+    # a.add_state('q1')
+    # a.add_transition(0, 1, 'a')
+    # a.set_final_state(1)
+    # a.display()
+    #
+    # print '\nFor the regular expression segment : (b)'
+    # b.add_state('q0')
+    # b.add_state('q1')
+    # b.add_transition(0, 1, 'b')
+    # b.set_final_state(1)
+    # b.display()
+    #
+    # print '\nFor the regular expression segment [Concatenation] : (a.b)'
+    # concat(a, b).display()
+    #
+    # print '\nFor the regular expression segment [Kleene Closure] : (a*)'
+    # a_star = kleene_star(a)
+    # a_star.display()
+    #
+    # print '\nFor the regular expression segment [Or] : (a|b)'
+    # union(a, b).display()
+    #
+    # print '\nExample 1 : a.(a|b)'
+    # concat(a, union(a, b)).display()
 
     print '\nExample 2 : (a.(b|c))'
-    re_to_nfa('(a.(b|c))').display()
+    nfa_from_re = re_to_nfa('(a.(b|c))')
+    nfa_from_re.display()
+    nfa_from_re.table.display()
+    nfa_from_re.table.to_dfa_table()
 
-    print '\nExample 3 : (1.(0*).1)'
-    re_to_nfa('(1.(0*).1)').display()
+
+    # print '\nExample 3 : (1.(0*).1)'
+    # re_to_nfa('(1.(0*).1)').display()
 
 
 if __name__ == '__main__':
