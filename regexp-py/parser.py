@@ -44,17 +44,17 @@ def union(left_nfa, right_nfa):
 
     res = NFA(state_list, f_state)
 
-    res.add_transition(0, 1, NFA.EPSILON)
+    res.add_transition(0, 1, FiniteAutomaton.EPSILON)
     for trans in left_nfa.transitions:
         res.add_transition(trans.t_from + 1, trans.t_to + 1, trans.t_symbol)
     i = left_nfa.count_states()
-    res.add_transition(i, f_state, NFA.EPSILON)
+    res.add_transition(i, f_state, FiniteAutomaton.EPSILON)
 
     i += 1
-    res.add_transition(0, i, NFA.EPSILON)
+    res.add_transition(0, i, FiniteAutomaton.EPSILON)
     for trans in right_nfa.transitions:
         res.add_transition(trans.t_from + i, trans.t_to + i, trans.t_symbol)
-    res.add_transition(right_nfa.count_states() + i - 1, f_state, NFA.EPSILON)
+    res.add_transition(right_nfa.count_states() + i - 1, f_state, FiniteAutomaton.EPSILON)
     return res
 
 
