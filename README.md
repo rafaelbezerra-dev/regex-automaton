@@ -24,5 +24,5 @@ The code will be tested on many standard patterns using a set of sentences. The 
 The code will also be benchmarked against the default C++ regex library.
 
 ##References
-1.  [Code Project Tutorial](http://www.codeproject.com/Articles/5412/Writing-own-regular-expression-parser)
-2.  [Thompson's Construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
+*  [Code Project Tutorial](http://www.codeproject.com/Articles/5412/Writing-own-regular-expression-parser)
+*  [Thompson's Construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
