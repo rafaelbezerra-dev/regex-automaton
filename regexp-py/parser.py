@@ -1,5 +1,6 @@
 from py_finite_automaton import *
 from py_nfa import *
+from py_dfa import *
 
 EPSILON = FiniteAutomaton.EPSILON
 
@@ -93,7 +94,7 @@ def zero_or_one(nfa):
 
     return res
 
-def zero_or_more(nfa):
+def one_or_more(nfa):
     n_states = nfa.count_states() + 1
     state_list = []
     for i in range(n_states):
@@ -165,10 +166,10 @@ def main():
     # print '\nFor the regular expression segment [Concatenation] : (a.b)'
     # concat(a, b).display()
     #
-    print '\nFor the regular expression segment [Kleene Closure] : (a*)'
-    a_star = zero_or_more(a)
-    a_star.display()
-    a_star.table.display()
+    # print '\nFor the regular expression segment [Kleene Closure] : (a*)'
+    # a_star = zero_or_more(a)
+    # a_star.display()
+    # a_star.table.display()
     #
     # print '\nFor the regular expression segment [Or] : (a|b)'
     # union(a, b).display()
@@ -176,11 +177,31 @@ def main():
     # print '\nExample 1 : a.(a|b)'
     # concat(a, union(a, b)).display()
 
-    # print '\nExample 2 : (a.(b|c))'
-    # nfa_from_re = re_to_nfa('(a.(b|c))')
+    re = '(a*.(b|c))'
+    print '\nExample 2 : ' + re
+    nfa_from_re = re_to_nfa(re)
     # nfa_from_re.display()
-    # nfa_from_re.table.display()
+    nfa_from_re.table.display()
+    dfa = DFA()
+    dfa.from_nfa_table(nfa_from_re.table)
     # nfa_from_re.table.to_dfa_table()
+
+    # state_list = []
+    # for i in range(6):
+    #     state_list.append(State('q' + str(i)))
+    # test_nfa = NFA(state_list, 5)
+    # _e_ = FiniteAutomaton.EPSILON
+    # test_nfa.add_transition(0, 1, _e_)
+    # test_nfa.add_transition(0, 5, _e_)
+    # test_nfa.add_transition(1, 2, '1')
+    # test_nfa.add_transition(2, 3, _e_)
+    # test_nfa.add_transition(3, 4, 0)
+    # test_nfa.add_transition(4, 1, _e_)
+    # test_nfa.add_transition(4, 5, _e_)
+    # test_nfa.table.display()
+    # dfa = DFA()
+    # dfa.from_nfa_table(test_nfa.table)
+
 
 
     # print '\nExample 3 : (1.(0*).1)'

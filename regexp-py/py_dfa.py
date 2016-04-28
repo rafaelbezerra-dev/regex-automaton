@@ -1,4 +1,10 @@
+# from collections import deque
+# from Queue import *
+from collections import deque
+
 from py_finite_automaton import *
+from py_nfa import *
+
 
 class DFA:
     def __init__(self, states=None, transitions=None):
@@ -51,6 +57,54 @@ class DFA:
                 name = trans.t_to.name
                 state_to = '{' + name + '}' if trans.t_to.is_final else ' ' + name + ' '
                 print trans.t_from.name, ' -->', state_to, ' : Symbol - ', trans.t_symbol
+
+    def from_nfa_table(self, nfa_table):
+        # states_visited = []
+        visited_sets = []
+        queue = deque([])
+        queue.append(nfa_table.tb[0][FiniteAutomaton.EPSILON])
+        nfa_states_count = len(nfa_table.tb)
+        # for i in range(nfa_states_count):
+        #     states_visited.append(False)
+
+        while len(queue) > 0:
+            curr_state_set = queue.popleft()
+            if len(curr_state_set) == 0 or str(curr_state_set) in visited_sets:
+                continue
+            visited_sets.append(str(curr_state_set))
+            __str_state__ = str(curr_state_set)
+            complete_state_set = []
+            states_visited = [False] * nfa_states_count
+            for curr_state in curr_state_set:
+                states_visited[curr_state] = True
+            for curr_state in curr_state_set:
+                eclosure = nfa_table.tb[curr_state][FiniteAutomaton.EPSILON]
+                for eclosure_state in eclosure:
+                    if not states_visited[eclosure_state]:
+                        curr_state_set.append(eclosure_state)
+                        states_visited[eclosure_state] = True
+            print __str_state__, '(', curr_state_set, ')'
+            for symbol in nfa_table.alphabet:
+                if symbol == FiniteAutomaton.EPSILON:
+                    continue
+                next_set = []
+                states_visited = [False] * nfa_states_count
+                for curr_state in curr_state_set:
+                    if symbol in nfa_table.tb[curr_state]:
+                        next_states = nfa_table.tb[curr_state][symbol]
+                        for ns in next_states:
+                            eclosure = nfa_table.tb[ns][FiniteAutomaton.EPSILON]
+                            for eclosure_state in eclosure:
+                                if not states_visited[eclosure_state]:
+                                    next_set.append(eclosure_state)
+                                    states_visited[eclosure_state] = True
+                if len(next_set) > 0:
+                    print symbol, ' --> ', next_set
+                if len(next_set) > 0 and str(next_set) not in visited_sets:
+                    # visited_sets.append(str(next_set))
+                    queue.append(next_set)
+
+        print nfa_states_count
 
 
 class DFA_TABLE:
