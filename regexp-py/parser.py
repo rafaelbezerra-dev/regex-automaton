@@ -1,4 +1,7 @@
-from nfa_model import *
+from py_finite_automaton import *
+from py_nfa import *
+
+EPSILON = FiniteAutomaton.EPSILON
 
 def concat(left_nfa, right_nfa):
     n_states = left_nfa.count_states() + right_nfa.count_states() - 1
@@ -14,24 +17,6 @@ def concat(left_nfa, right_nfa):
     i = left_nfa.count_states() - 1
     for trans in right_nfa.transitions:
         res.add_transition(trans.t_from + i, trans.t_to + i, trans.t_symbol)
-    return res
-
-
-def kleene_star(nfa):
-    n_states = nfa.count_states() + 2
-    state_list = []
-    for i in range(n_states):
-        state_list.append(State('q' + str(i)))
-    res = NFA(state_list, n_states - 1)
-
-    for trans in nfa.transitions:
-        res.add_transition(trans.t_from + 1, trans.t_to + 1, trans.t_symbol)
-
-    res.add_transition(0, 1, NFA.EPSILON)
-    res.add_transition(0, n_states - 1, NFA.EPSILON)
-    res.add_transition(n_states - 2, 1, NFA.EPSILON)
-    res.add_transition(n_states - 2, n_states - 1, NFA.EPSILON)
-
     return res
 
 
@@ -58,6 +43,76 @@ def union(left_nfa, right_nfa):
     return res
 
 
+# def kleene_star(nfa):
+#     n_states = nfa.count_states() + 2
+#     state_list = []
+#     for i in range(n_states):
+#         state_list.append(State('q' + str(i)))
+#     res = NFA(state_list, n_states - 1)
+#
+#     for trans in nfa.transitions:
+#         res.add_transition(trans.t_from + 1, trans.t_to + 1, trans.t_symbol)
+#
+#     res.add_transition(0, 1, EPSILON)
+#     res.add_transition(0, n_states - 1, EPSILON)
+#     res.add_transition(n_states - 2, 1, EPSILON)
+#     res.add_transition(n_states - 2, n_states - 1, EPSILON)
+#
+#     return res
+def zero_or_more(nfa):
+    n_states = nfa.count_states() + 1
+    state_list = []
+    for i in range(n_states):
+        state_list.append(State('q' + str(i)))
+    res = NFA(state_list, n_states - 1)
+
+    for trans in nfa.transitions:
+        res.add_transition(trans.t_from, trans.t_to, trans.t_symbol)
+
+    # res.add_transition(0, 1, EPSILON)
+    res.add_transition(0, n_states - 1, EPSILON)
+    res.add_transition(n_states - 2, 0, EPSILON)
+    # res.add_transition(n_states - 2, n_states - 1, EPSILON)
+
+
+    return res
+
+
+def zero_or_one(nfa):
+    n_states = nfa.count_states() + 1
+    state_list = []
+    for i in range(n_states):
+        state_list.append(State('q' + str(i)))
+    res = NFA(state_list, n_states - 1)
+
+    for trans in nfa.transitions:
+        res.add_transition(trans.t_from, trans.t_to, trans.t_symbol)
+
+    res.add_transition(0, n_states - 1, EPSILON)
+    res.add_transition(n_states - 2, n_states - 1, EPSILON)
+
+    return res
+
+def zero_or_more(nfa):
+    n_states = nfa.count_states() + 1
+    state_list = []
+    for i in range(n_states):
+        state_list.append(State('q' + str(i)))
+    res = NFA(state_list, n_states - 1)
+
+    for trans in nfa.transitions:
+        res.add_transition(trans.t_from, trans.t_to, trans.t_symbol)
+
+    # res.add_transition(0, 1, EPSILON)
+    res.add_transition(n_states - 2, 0, EPSILON)
+    # res.add_transition(n_states - 1, 0, EPSILON)
+    res.add_transition(n_states - 2, n_states - 1, EPSILON)
+
+
+    return res
+
+
+
 def re_to_nfa(regexp):
     __known_operators__ = ['(', ')', '.', '|', '*']
     operands = []
@@ -70,7 +125,7 @@ def re_to_nfa(regexp):
         else:
             if symbol == '*':
                 star_nfa = operands.pop()
-                operands.append(kleene_star(star_nfa))
+                operands.append(zero_or_more(star_nfa))
             elif symbol == '.':
                 operators.append(symbol)
             elif symbol == '|':
@@ -90,14 +145,14 @@ def re_to_nfa(regexp):
     return operands.pop()
 
 def main():
-    # a = NFA()
+    a = NFA()
     # b = NFA()
     #
     # print '\nFor the regular expression segment : (a)'
-    # a.add_state('q0')
-    # a.add_state('q1')
-    # a.add_transition(0, 1, 'a')
-    # a.set_final_state(1)
+    a.add_state('q0')
+    a.add_state('q1')
+    a.add_transition(0, 1, 'a')
+    a.set_final_state(1)
     # a.display()
     #
     # print '\nFor the regular expression segment : (b)'
@@ -110,9 +165,10 @@ def main():
     # print '\nFor the regular expression segment [Concatenation] : (a.b)'
     # concat(a, b).display()
     #
-    # print '\nFor the regular expression segment [Kleene Closure] : (a*)'
-    # a_star = kleene_star(a)
-    # a_star.display()
+    print '\nFor the regular expression segment [Kleene Closure] : (a*)'
+    a_star = zero_or_more(a)
+    a_star.display()
+    a_star.table.display()
     #
     # print '\nFor the regular expression segment [Or] : (a|b)'
     # union(a, b).display()
@@ -120,11 +176,11 @@ def main():
     # print '\nExample 1 : a.(a|b)'
     # concat(a, union(a, b)).display()
 
-    print '\nExample 2 : (a.(b|c))'
-    nfa_from_re = re_to_nfa('(a.(b|c))')
-    nfa_from_re.display()
-    nfa_from_re.table.display()
-    nfa_from_re.table.to_dfa_table()
+    # print '\nExample 2 : (a.(b|c))'
+    # nfa_from_re = re_to_nfa('(a.(b|c))')
+    # nfa_from_re.display()
+    # nfa_from_re.table.display()
+    # nfa_from_re.table.to_dfa_table()
 
 
     # print '\nExample 3 : (1.(0*).1)'
