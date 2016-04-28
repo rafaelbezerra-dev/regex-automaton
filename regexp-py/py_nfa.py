@@ -60,6 +60,8 @@ class NFA:
                 state_to = '{' + name + '}' if trans.t_to.is_final else ' ' + name + ' '
                 print trans.t_from.name, ' -->', state_to, ' : Symbol - ', trans.t_symbol
 
+    def displayTable(self):
+        self.table.display()
 
 class NFA_TABLE:
     def __init__(self):

@@ -58,11 +58,18 @@ class DFA:
                 state_to = '{' + name + '}' if trans.t_to.is_final else ' ' + name + ' '
                 print trans.t_from.name, ' -->', state_to, ' : Symbol - ', trans.t_symbol
 
+    def displayTable(self):
+        self.table.display()
+
     def from_nfa_table(self, nfa_table):
         # states_visited = []
         visited_sets = []
         queue = deque([])
-        queue.append(nfa_table.tb[0][FiniteAutomaton.EPSILON])
+        first_set = nfa_table.tb[0][FiniteAutomaton.EPSILON]
+        queue.append(first_set)
+        dfa_state_count = 0
+        dfa_state_mapping = dict([(str(first_set), dfa_state_count)])
+        self.add_state(str(first_set))
         nfa_states_count = len(nfa_table.tb)
         # for i in range(nfa_states_count):
         #     states_visited.append(False)
@@ -72,8 +79,16 @@ class DFA:
             if len(curr_state_set) == 0 or str(curr_state_set) in visited_sets:
                 continue
             visited_sets.append(str(curr_state_set))
-            __str_state__ = str(curr_state_set)
-            complete_state_set = []
+            state_name = str(curr_state_set)
+            # dfa_state = State(str(curr_state_set))
+            # if dfa_state.state_name not in dfa_state_mapping:
+            #     # self.add_state()
+            #     self.states.append(dfa_state)
+            #     dfa_state_count += 1
+            #     dfa_state_mapping[dfa_state.name] = dfa_state_count
+
+            # complete_state_set = []
+            is_final_state = False
             states_visited = [False] * nfa_states_count
             for curr_state in curr_state_set:
                 states_visited[curr_state] = True
@@ -83,13 +98,15 @@ class DFA:
                     if not states_visited[eclosure_state]:
                         curr_state_set.append(eclosure_state)
                         states_visited[eclosure_state] = True
-            print __str_state__, '(', curr_state_set, ')'
+            # print state_name, '(', curr_state_set, ')'
             for symbol in nfa_table.alphabet:
                 if symbol == FiniteAutomaton.EPSILON:
                     continue
                 next_set = []
                 states_visited = [False] * nfa_states_count
                 for curr_state in curr_state_set:
+                    if curr_state == nfa_table.final_state_index:
+                        is_final_state = True
                     if symbol in nfa_table.tb[curr_state]:
                         next_states = nfa_table.tb[curr_state][symbol]
                         for ns in next_states:
@@ -98,13 +115,26 @@ class DFA:
                                 if not states_visited[eclosure_state]:
                                     next_set.append(eclosure_state)
                                     states_visited[eclosure_state] = True
+
                 if len(next_set) > 0:
-                    print symbol, ' --> ', next_set
+                    # print symbol, ' --> ', next_set
+                    next_state_name = str(next_set)
+                    if next_state_name not in dfa_state_mapping:
+                        self.add_state(next_state_name)
+                        dfa_state_count += 1
+                        dfa_state_mapping[next_state_name] = dfa_state_count
+                    self.add_transition(dfa_state_mapping[state_name], dfa_state_mapping[next_state_name], symbol)
+                else:
+                    self.add_transition(dfa_state_mapping[state_name], 0, symbol)
+                if is_final_state:
+                    self.add_final_state(dfa_state_mapping[state_name])
+
                 if len(next_set) > 0 and str(next_set) not in visited_sets:
                     # visited_sets.append(str(next_set))
                     queue.append(next_set)
 
-        print nfa_states_count
+        self.display()
+        self.displayTable()
 
 
 class DFA_TABLE:
@@ -150,3 +180,4 @@ class DFA_TABLE:
             print_table.append(line)
         # print tabulate([["Name", "Age"], ["Alice", 24], ["Bob", 19]], headers="firstrow")
         print tabulate(print_table, headers="firstrow")
+

@@ -177,11 +177,11 @@ def main():
     # print '\nExample 1 : a.(a|b)'
     # concat(a, union(a, b)).display()
 
-    re = '(a*.(b|c))'
+    re = '(1.(1.0)*.1)'
     print '\nExample 2 : ' + re
     nfa_from_re = re_to_nfa(re)
-    # nfa_from_re.display()
-    nfa_from_re.table.display()
+    nfa_from_re.display()
+    nfa_from_re.displayTable()
     dfa = DFA()
     dfa.from_nfa_table(nfa_from_re.table)
     # nfa_from_re.table.to_dfa_table()
