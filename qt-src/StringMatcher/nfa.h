@@ -45,17 +45,18 @@ public:
     vector<State> getStates();
     State getState(int i);
     void addState(string name);
-    int countState();
+    int countStates();
     void setFinalState(int i);
     void addTransition(int from, int to, string symbol);
+    vector<Transition> getTransitions();
     void display();
     void displayTable();
 
-    static NFA concat(NFA left, NFA right);
-    static NFA or_selection(NFA left, NFA right);
-    static NFA zero_or_more(NFA nfa);
-    static NFA zero_or_one(NFA nfa);
-    static NFA one_or_more(NFA nfa);
+    static NFA CONCAT(NFA left, NFA right);
+    static NFA OR(NFA left, NFA right);
+    static NFA ZERO_OR_MORE(NFA nfa);
+    static NFA ZERO_OR_ONE(NFA nfa);
+    static NFA ONE_OR_MORE(NFA nfa);
 
 
 };

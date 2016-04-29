@@ -8,10 +8,10 @@ using namespace std;
 class Transition
 {
 private:
+public:
     int from;
     int to;
     string symbol;
-public:
     Transition(int from, int to, string symbol);
 };
 

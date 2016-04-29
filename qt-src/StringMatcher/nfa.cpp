@@ -74,7 +74,7 @@ void NFA::addState(string name){
     this->table.addTransition(i, i, Symbol::EPSILON);
 }
 
-int NFA::countState(){
+int NFA::countStates(){
     return this->states.size();
 }
 
@@ -83,6 +83,15 @@ void NFA::setFinalState(int i){
     ((State)this->states[i]).setFinal(true);
     this->finalStateIndex = i;
     this->table.setFinalState(i);
+}
+
+void NFA::addTransition(int from, int to, string symbol){
+    this->transitions.push_back(Transition(from, to, symbol));
+    this->table.addTransition(from, to, symbol);
+}
+
+vector<Transition> NFA::getTransitions(){
+    return this->transitions;
 }
 
 void NFA::display(){
@@ -100,22 +109,69 @@ void NFA::displayTable(){
  *
  ********************************************/
 
-NFA NFA::concat(NFA left, NFA right){
+NFA NFA::CONCAT(NFA left, NFA right){
+    int nStates = left.countStates() + right.countStates() + 1;
+    vector<State> states;
+    for (int i = 0; i < nStates; ++i) {
+        states.push_back(State("q" + to_string(i)));
+    }
+    NFA res = NFA(states, nStates-1);
+
+    vector<Transition> trans = left.getTransitions();
+    for (vector<Transition>::iterator it = trans.begin();
+         it != trans.end();++it){
+        res.addTransition(it->from, it->to, it->symbol);
+    }
+
+    int i = left.countStates() - 1;
+
+    trans = right.getTransitions();
+    for (vector<Transition>::iterator it = trans.begin();
+         it != trans.end();++it){
+        res.addTransition(it->from + i, it->to + i, it->symbol);
+    }
+
+    return res;
+}
+
+NFA NFA::OR(NFA left, NFA right){
+    int nStates = left.countStates() + right.countStates() + 2;
+    int finalState = nStates -1;
+    vector<State> states;
+    for (int i = 0; i < nStates; ++i) {
+        states.push_back(State("q" + to_string(i)));
+    }
+    NFA res = NFA(states, nStates-1);
+
+    res.addTransition(0, 1, Symbol::EPSILON);
+    vector<Transition> trans = left.getTransitions();
+    for (vector<Transition>::iterator it = trans.begin();
+         it != trans.end();++it){
+        res.addTransition(it->from+1, it->to+1, it->symbol);
+    }
+    int i = left.countStates();
+    res.addTransition(i, finalState, Symbol::EPSILON);
+
+    i++;
+    res.addTransition(0, i, Symbol::EPSILON);
+    trans = right.getTransitions();
+    for (vector<Transition>::iterator it = trans.begin();
+         it != trans.end();++it){
+        res.addTransition(it->from+i, it->to+i, it->symbol);
+    }
+    res.addTransition(right.countStates()+i-1, finalState, Symbol::EPSILON);
+
+    return res;
+}
+
+NFA NFA::ZERO_OR_MORE(NFA nfa){
 
 }
 
-NFA NFA::or_selection(NFA left, NFA right){
+NFA NFA::ZERO_OR_ONE(NFA nfa){
 
 }
 
-NFA NFA::zero_or_more(NFA nfa){
-
-}
-
-NFA NFA::zero_or_one(NFA nfa){
-
-}
-
-NFA NFA::one_or_more(NFA nfa){
+NFA NFA::ONE_OR_MORE(NFA nfa){
 
 }
