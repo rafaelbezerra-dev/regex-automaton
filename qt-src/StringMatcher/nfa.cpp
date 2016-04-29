@@ -48,7 +48,9 @@ void NFATable::addTransition(int from, int to, string symbol){
  *
  *************************************/
 
-NFA::NFA(){}
+NFA::NFA(){
+    this->finalStateIndex = 0;
+}
 
 NFA::NFA(string regex) : regex(regex){}
 
@@ -79,8 +81,8 @@ int NFA::countStates(){
 }
 
 void NFA::setFinalState(int i){
-    ((State)this->states[this->finalStateIndex]).setFinal(false);
-    ((State)this->states[i]).setFinal(true);
+    this->states[this->finalStateIndex].setFinal(false);
+    this->states[i].setFinal(true);
     this->finalStateIndex = i;
     this->table.setFinalState(i);
 }
@@ -95,7 +97,31 @@ vector<Transition> NFA::getTransitions(){
 }
 
 void NFA::display(){
-    cout << "NFA display not implemented yet." << endl;
+    cout<<"\n";
+    Transition trans;
+    for(unsigned int i = 0; i < this->transitions.size(); i++) {
+        trans = this->transitions.at(i);
+        string fromStName;
+        string toStName;
+
+        if (this->states[trans.from].isFinal()){
+            fromStName = "{" + this->states[trans.from].getName() + "}";
+        }
+        else{
+            fromStName = " " + this->states[trans.from].getName()+ " ";
+        }
+
+        if (this->states[trans.to].isFinal()){
+            toStName = "{" + this->states[trans.to].getName()+ "}";
+        }
+        else{
+            toStName = " " + this->states[trans.to].getName()+ " ";
+        }
+
+        cout << fromStName << " --> " << toStName
+             << " : Symbol - " << trans.symbol
+             << endl;
+    }
 }
 
 void NFA::displayTable(){
@@ -110,7 +136,7 @@ void NFA::displayTable(){
  ********************************************/
 
 NFA NFA::CONCAT(NFA left, NFA right){
-    int nStates = left.countStates() + right.countStates() + 1;
+    int nStates = left.countStates() + right.countStates() - 1;
     vector<State> states;
     for (int i = 0; i < nStates; ++i) {
         states.push_back(State("q" + to_string(i)));

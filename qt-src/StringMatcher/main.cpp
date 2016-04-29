@@ -8,17 +8,54 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-    cout << "Hello World!" << endl;
+    NFA a, b;
 
-    vector<Transition> trans;
-    trans.push_back(Transition(0, 1, "a"));
-    trans.push_back(Transition(0, 1, "b"));
-    for (vector<Transition>::iterator it = trans.begin();
-         it != trans.end();++it){
-        cout << it->symbol << endl;
-    }
+    cout<<"\nFor the regular expression segment : (a)";
+    a.addState("q0");
+    a.addState("q1");
+    a.addTransition(0, 1, "a");
+    a.setFinalState(1);
+    a.display();
+//  getch();
 
-    cout << Symbol::EPSILON << endl;
+    cout<<"\nFor the regular expression segment : (b)";
+    b.addState("q0");
+    b.addState("q1");
+    b.addTransition(0, 1, "b");
+    b.setFinalState(1);
+    b.display();
+////  getch();
+
+    cout<<"\nFor the regular expression segment [Concatenation] : (a.b)";
+//    NFA ab = concat(a, b);
+    NFA::CONCAT(a, b).display();
+////  getch();
+
+    cout<<"\nFor the regular expression segment [Or] : (a|b)";
+    NFA::OR(a, b).display();
+////  getch();
+
+//    cout<<"\nFor the regular expression segment [Kleene Closure] : (a*)";
+//    NFA a_star = kleene(a);
+//    a_star.display();
+////  getch();
+
+//    string re;
+//    set<char> symbols;
+
+//    cout<<"\n*****\t*****\t*****\n";
+//    cout<<"\nFORMAT : \n"
+//        <<"> Explicitly mention concatenation with a '.' operator \n"
+//        <<"> Enclose every concatenation and or section by parantheses \n"
+//        <<"> Enclose the entire regular expression with parantheses \n\n";
+
+//    cout<<"For example : \nFor the regular expression (a.(b|c))  -- \n";
+//    NFA example_nfa = re_to_nfa("(a.(b|c))");
+//    example_nfa.display();
+
+//    cout<<"\n\nEnter the regular expression in the above mentioned format - \n\n";
+//    cin>>re;
+
 
     return 0;
 }

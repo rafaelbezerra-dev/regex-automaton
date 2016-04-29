@@ -16,6 +16,7 @@ private:
 public:
     State(string name);
     void setFinal(bool isFinal);
+    string getName();
     bool isFinal();
 };
 

@@ -12,6 +12,7 @@ public:
     int from;
     int to;
     string symbol;
+    Transition();
     Transition(int from, int to, string symbol);
 };
 
