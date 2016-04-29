@@ -191,13 +191,63 @@ NFA NFA::OR(NFA left, NFA right){
 }
 
 NFA NFA::ZERO_OR_MORE(NFA nfa){
+    int nStates = nfa.countStates() + 1;
+    vector<State> states;
+    for (int i = 0; i < nStates; ++i) {
+        states.push_back(State("q" + to_string(i)));
+    }
+    NFA res = NFA(states, nStates-1);
 
+    vector<Transition> trans = nfa.getTransitions();
+    for (vector<Transition>::iterator it = trans.begin();
+         it != trans.end();++it){
+        res.addTransition(it->from, it->to, it->symbol);
+    }
+
+    res.addTransition(0, nStates-1, Symbol::EPSILON);
+    res.addTransition(nStates-2, 0, Symbol::EPSILON);
+
+    return res;
 }
 
 NFA NFA::ZERO_OR_ONE(NFA nfa){
+    int nStates = nfa.countStates() + 1;
+    vector<State> states;
+    for (int i = 0; i < nStates; ++i) {
+        states.push_back(State("q" + to_string(i)));
+    }
+    NFA res = NFA(states, nStates-1);
+
+    vector<Transition> trans = nfa.getTransitions();
+    for (vector<Transition>::iterator it = trans.begin();
+         it != trans.end();++it){
+        res.addTransition(it->from, it->to, it->symbol);
+    }
+
+    res.addTransition(0, nStates-1, Symbol::EPSILON);
+    res.addTransition(nStates-2, nStates-1, Symbol::EPSILON);
+
+    return res;
 
 }
 
 NFA NFA::ONE_OR_MORE(NFA nfa){
+    int nStates = nfa.countStates() + 1;
+    vector<State> states;
+    for (int i = 0; i < nStates; ++i) {
+        states.push_back(State("q" + to_string(i)));
+    }
+    NFA res = NFA(states, nStates-1);
+
+    vector<Transition> trans = nfa.getTransitions();
+    for (vector<Transition>::iterator it = trans.begin();
+         it != trans.end();++it){
+        res.addTransition(it->from, it->to, it->symbol);
+    }
+
+    res.addTransition(nStates-2, 0, Symbol::EPSILON);
+    res.addTransition(nStates-2, nStates-1, Symbol::EPSILON);
+
+    return res;
 
 }

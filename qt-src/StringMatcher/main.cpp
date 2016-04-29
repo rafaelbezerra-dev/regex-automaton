@@ -35,9 +35,16 @@ int main(int argc, char *argv[])
     NFA::OR(a, b).display();
 ////  getch();
 
-//    cout<<"\nFor the regular expression segment [Kleene Closure] : (a*)";
-//    NFA a_star = kleene(a);
-//    a_star.display();
+    cout<<"\nFor the regular expression segment [zero or one] : (a?)";
+    NFA::ZERO_OR_ONE(a).display();
+////  getch();
+
+    cout<<"\nFor the regular expression segment [zero or more] : (a*)";
+    NFA::ZERO_OR_MORE(a).display();
+////  getch();
+
+    cout<<"\nFor the regular expression segment [one or more] : (a+)";
+    NFA::ONE_OR_MORE(a).display();
 ////  getch();
 
 //    string re;
