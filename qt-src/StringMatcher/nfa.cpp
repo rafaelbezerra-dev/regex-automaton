@@ -13,34 +13,43 @@ void NFATable::setFinalState(int i){
 void NFATable::addTransition(int from, int to, string symbol){
     this->alphabet.insert(symbol);
 
-    unordered_map<int, unordered_map<string, vector<int>>>::const_iterator itr
-            = this->tb.find(from);
-    if (itr != this->tb.end()){
-        unordered_map<string, vector<int>> row = itr->second;
-        unordered_map<string, vector<int>>::const_iterator row_itr
-                = row.find(symbol);
-        if (row_itr != row.end()){
+//    unordered_map<int, unordered_map<string, vector<int>>>::const_iterator itr
+//            = this->tb.find(from);
+//    if (itr != this->tb.end()){
+    if (this->tb.find(from) != this->tb.end()){
+//        unordered_map<string, vector<int>> row = itr->second;
+//        unordered_map<string, vector<int>>::const_iterator row_itr
+//                = row.find(symbol);
+//        if (row_itr != row.end()){
             //           vector<int> col = row_itr->second;
             //           col.push_back(to);
-            this->tb[from][symbol].push_back(to);
+        if (this->tb[from].find(symbol) != this->tb[from].end()){
+            this->tb[from][symbol].insert(to);
         }
         else{
-            pair<string, vector<int>> p;
+            pair<string, unordered_set<int>> p;
             p.first = symbol;
-            p.second = vector<int>{to};
+            p.second = unordered_set<int>{to};
             this->tb[from].insert(p);
         }
     }
     else{
-        pair<int, unordered_map<string, vector<int>>> p;
+        pair<int, table_row> p;
         p.first = from;
-        p.second = unordered_map<string, vector<int>>{{ symbol, vector<int>{to} }};
+        p.second = table_row{{ symbol, unordered_set<int>{to} }};
         this->tb.insert(p);
 
     }
 }
 
 
+unordered_set<string> NFATable::getAlphabet(){
+    return this->alphabet;
+}
+
+table NFATable::getTable(){
+    return this->tb;
+}
 
 /*************************************
  *
@@ -95,6 +104,19 @@ void NFA::addTransition(int from, int to, string symbol){
 vector<Transition> NFA::getTransitions(){
     return this->transitions;
 }
+
+void NFA::setTransitions(vector<Transition> transitions){
+    this->transitions = transitions;
+}
+
+NFATable NFA::getTable(){
+    return this->table;
+}
+
+void NFA::setTable(NFATable table){
+    this->table = table;
+}
+
 
 void NFA::display(){
     cout<<"\n";

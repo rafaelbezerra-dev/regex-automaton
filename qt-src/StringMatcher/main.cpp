@@ -1,13 +1,29 @@
 #include <iostream>
 #include <unordered_set>
 #include <unordered_map>
+#include <vector>
 
 #include "nfa.h"
+#include "utils.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
+    vector<int> v;
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    cout << Utils::TO_STRING(v) << endl;
+
+    unordered_set<int> s;
+    s.insert(1);
+    s.insert(2);
+    s.insert(3);
+    s.insert(1);
+    cout << Utils::TO_STRING(s) << endl;
+    return 0;
+
     NFA a, b;
 
     cout<<"\nFor the regular expression segment : (a)";

@@ -14,26 +14,28 @@ void DFATable::addFinalState(int i){
 void DFATable::addTransition(int from, int to, string symbol){
     this->alphabet.insert(symbol);
 
-    unordered_map<int, unordered_map<string, vector<int>>>::const_iterator itr
-            = this->tb.find(from);
-    if (itr != this->tb.end()){
-        unordered_map<string, vector<int>> row = itr->second;
-        unordered_map<string, vector<int>>::const_iterator row_itr
-                = row.find(symbol);
-        if (row_itr != row.end()){
-            this->tb[from][symbol].push_back(to);
+//    unordered_map<int, unordered_map<string, vector<int>>>::const_iterator itr
+//            = this->tb.find(from);
+//    if (itr != this->tb.end()){
+    if (this->tb.find(from) != this->tb.end()){
+//        unordered_map<string, vector<int>> row = itr->second;
+//        unordered_map<string, vector<int>>::const_iterator row_itr
+//                = row.find(symbol);
+//        if (row_itr != row.end()){
+        if (this->tb[from].find(symbol) != this->tb[from].end()){
+            this->tb[from][symbol].insert(to);
         }
         else{
-            pair<string, vector<int>> p;
+            pair<string, unordered_set<int>> p;
             p.first = symbol;
-            p.second = vector<int>{to};
+            p.second = unordered_set<int>{to};
             this->tb[from].insert(p);
         }
     }
     else{
-        pair<int, unordered_map<string, vector<int>>> p;
+        pair<int, table_row> p;
         p.first = from;
-        p.second = unordered_map<string, vector<int>>{{ symbol, vector<int>{to} }};
+        p.second = table_row{{ symbol, unordered_set<int>{to} }};
         this->tb.insert(p);
 
     }
@@ -88,6 +90,18 @@ vector<Transition> DFA::getTransitions(){
     return this->transitions;
 }
 
+void DFA::setTransitions(vector<Transition> transitions){
+    this->transitions = transitions;
+}
+
+DFATable DFA::getTable(){
+    return this->table;
+}
+
+void DFA::setTable(DFATable table){
+    this->table = table;
+}
+
 void DFA::display(){
     cout<<"\n";
     Transition trans;
@@ -121,11 +135,17 @@ void DFA::displayTable(){
 }
 
 
-///********************************************
-// *
-// * ### NFA STATIC METHODS IMPLEMENTATIONS ###
-// *
-// ********************************************/
+/********************************************
+ *
+ * ### NFA STATIC METHODS IMPLEMENTATIONS ###
+ *
+ ********************************************/
 
 
-//static DFA DFA::FROM_NFA(NFA nfa);
+DFA DFA::FROM_NFA(NFA nfa){
+    NFATable nfa_tabel = nfa.getTable();
+    unordered_set<string> sets_visited;
+    queue<unordered_set<int>> sets_queue;
+    nfa_tabel.getTable()[0][Symbol::EPSILON];
+
+}

@@ -8,12 +8,14 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <stack>
+#include <queue>
 #include <utility>
 
 #include "symbol.h"
 #include "transition.h"
 #include "state.h"
 #include "nfa.h"
+#include "utils.h"
 
 using namespace std;
 
@@ -22,7 +24,7 @@ using namespace std;
 class DFATable
 {
 private:
-    unordered_map<int, unordered_map<string, vector<int>>> tb;
+    table tb;
     unordered_set<string> alphabet;
     unordered_set<int> finalStateIndexes;
 
@@ -52,6 +54,9 @@ public:
     unordered_set<int> getFinalStates();
     void addTransition(int from, int to, string symbol);
     vector<Transition> getTransitions();
+    void setTransitions(vector<Transition> transitions);
+    DFATable getTable();
+    void setTable(DFATable table);
     void display();
     void displayTable();
 

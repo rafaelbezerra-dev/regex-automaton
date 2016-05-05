@@ -8,11 +8,13 @@ SOURCES += main.cpp \
     symbol.cpp \
     transition.cpp \
     state.cpp \
-    dfa.cpp
+    dfa.cpp \
+    utils.cpp
 
 HEADERS += \
     nfa.h \
     symbol.h \
     transition.h \
     state.h \
-    dfa.h
+    dfa.h \
+    utils.h

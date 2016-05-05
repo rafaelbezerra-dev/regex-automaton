@@ -14,20 +14,23 @@
 #include "symbol.h"
 #include "transition.h"
 #include "state.h"
+#include "utils.h"
 
 using namespace std;
-
 
 class NFATable
 {
 private:
-    unordered_map<int, unordered_map<string, vector<int>>> tb;
+//    unordered_map<int, unordered_map<string, unordered_set<int>>> tb;
+    table tb;
     unordered_set<string> alphabet;
     int finalStateIndex;
 
 public:
     void setFinalState(int i);
     void addTransition(int from, int to, string symbol);
+    unordered_set<string> getAlphabet();
+    table getTable();
 };
 
 class NFA
@@ -49,6 +52,9 @@ public:
     void setFinalState(int i);
     void addTransition(int from, int to, string symbol);
     vector<Transition> getTransitions();
+    void setTransitions(vector<Transition> transitions);
+    NFATable getTable();
+    void setTable(NFATable table);
     void display();
     void displayTable();
 
