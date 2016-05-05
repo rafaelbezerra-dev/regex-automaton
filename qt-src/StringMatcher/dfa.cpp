@@ -65,19 +65,60 @@ void DFA::addState(string name){
     this->table.addTransition(i, i, Symbol::EPSILON);
 }
 
-//int DFA::countStates();
+int DFA::countStates() {
+    return this->states.size();
+}
 
-//void DFA::addFinalState(int i);
+void DFA::addFinalState(int i){
+    this->states[i].setFinal(true);
+    this->finalStateIndexes.insert(i);
+    this->table.addFinalState(i);
+}
 
-//unordered_set<int> DFA::getFinalStates();
+unordered_set<int> DFA::getFinalStates(){
+    return this->finalStateIndexes;
+}
 
-//void DFA::addTransition(int from, int to, string symbol);
+void DFA::addTransition(int from, int to, string symbol){
+    this->transitions.push_back(Transition(from, to, symbol));
+    this->table.addTransition(from, to, symbol);
+}
 
-//vector<Transition> DFA::getTransitions();
+vector<Transition> DFA::getTransitions(){
+    return this->transitions;
+}
 
-//void DFA::display();
+void DFA::display(){
+    cout<<"\n";
+    Transition trans;
+    for(unsigned int i = 0; i < this->transitions.size(); i++) {
+        trans = this->transitions.at(i);
+        string fromStName;
+        string toStName;
 
-//void DFA::displayTable();
+        if (this->states[trans.from].isFinal()){
+            fromStName = "{" + this->states[trans.from].getName() + "}";
+        }
+        else{
+            fromStName = " " + this->states[trans.from].getName()+ " ";
+        }
+
+        if (this->states[trans.to].isFinal()){
+            toStName = "{" + this->states[trans.to].getName()+ "}";
+        }
+        else{
+            toStName = " " + this->states[trans.to].getName()+ " ";
+        }
+
+        cout << fromStName << " --> " << toStName
+             << " : Symbol - " << trans.symbol
+             << endl;
+    }
+}
+
+void DFA::displayTable(){
+    cout << "DFA displayTable not implemented yet." << endl;
+}
 
 
 ///********************************************
