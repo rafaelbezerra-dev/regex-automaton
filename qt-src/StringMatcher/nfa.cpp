@@ -20,9 +20,9 @@ void NFATable::addTransition(int from, int to, string symbol){
         unordered_map<string, vector<int>>::const_iterator row_itr
                 = row.find(symbol);
         if (row_itr != row.end()){
-//           vector<int> col = row_itr->second;
-//           col.push_back(to);
-           this->tb[from][symbol].push_back(to);
+            //           vector<int> col = row_itr->second;
+            //           col.push_back(to);
+            this->tb[from][symbol].push_back(to);
         }
         else{
             pair<string, vector<int>> p;
@@ -31,7 +31,7 @@ void NFATable::addTransition(int from, int to, string symbol){
             this->tb[from].insert(p);
         }
     }
-    else{       
+    else{
         pair<int, unordered_map<string, vector<int>>> p;
         p.first = from;
         p.second = unordered_map<string, vector<int>>{{ symbol, vector<int>{to} }};

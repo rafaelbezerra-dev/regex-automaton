@@ -134,7 +134,11 @@ debug/state.o: ../StringMatcher/state.cpp ../StringMatcher/state.h \
 		../StringMatcher/symbol.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\state.o ..\StringMatcher\state.cpp
 
-debug/dfa.o: ../StringMatcher/dfa.cpp ../StringMatcher/dfa.h
+debug/dfa.o: ../StringMatcher/dfa.cpp ../StringMatcher/dfa.h \
+		../StringMatcher/symbol.h \
+		../StringMatcher/transition.h \
+		../StringMatcher/state.h \
+		../StringMatcher/nfa.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\dfa.o ..\StringMatcher\dfa.cpp
 
 ####### Install

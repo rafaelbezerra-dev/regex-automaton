@@ -134,7 +134,11 @@ release/state.o: ../StringMatcher/state.cpp ../StringMatcher/state.h \
 		../StringMatcher/symbol.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\state.o ..\StringMatcher\state.cpp
 
-release/dfa.o: ../StringMatcher/dfa.cpp ../StringMatcher/dfa.h
+release/dfa.o: ../StringMatcher/dfa.cpp ../StringMatcher/dfa.h \
+		../StringMatcher/symbol.h \
+		../StringMatcher/transition.h \
+		../StringMatcher/state.h \
+		../StringMatcher/nfa.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\dfa.o ..\StringMatcher\dfa.cpp
 
 ####### Install
