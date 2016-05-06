@@ -9,7 +9,7 @@ string Utils::TO_STRING(vector<int> v){
     return str_to;
 }
 
-string Utils::TO_STRING(unordered_set<int> s){
+string Utils::TO_STRING(int_set s){
     string str_to = "";
     for (auto i: s)
       str_to += to_string(i) + ' ';

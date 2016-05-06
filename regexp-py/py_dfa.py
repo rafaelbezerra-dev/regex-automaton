@@ -70,7 +70,8 @@ class DFA:
         queue.append(first_set)
         dfa_state_count = 0
         dfa_state_mapping = dict([(str(first_set), dfa_state_count)])
-        self.add_state(str(first_set))
+        # self.add_state(str(first_set))
+        self.add_state('q' + str(0))
         nfa_states_count = len(nfa_table.tb)
         # for i in range(nfa_states_count):
         #     states_visited.append(False)
@@ -121,12 +122,13 @@ class DFA:
                     # print symbol, ' --> ', next_set
                     next_state_name = str(next_set)
                     if next_state_name not in dfa_state_mapping:
-                        self.add_state(next_state_name)
+                        # self.add_state(next_state_name)
                         dfa_state_count += 1
+                        self.add_state('q' + str(dfa_state_count))
                         dfa_state_mapping[next_state_name] = dfa_state_count
                     self.add_transition(dfa_state_mapping[state_name], dfa_state_mapping[next_state_name], symbol)
-                else:
-                    self.add_transition(dfa_state_mapping[state_name], 0, symbol)
+                # else:
+                #     self.add_transition(dfa_state_mapping[state_name], 0, symbol)
                 if is_final_state:
                     self.add_final_state(dfa_state_mapping[state_name])
 

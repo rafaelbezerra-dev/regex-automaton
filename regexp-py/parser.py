@@ -178,8 +178,21 @@ def main():
     print '\nFor the regular expression segment [one or more] : (a+)'
     one_or_more(a).display()
 
-    print '\nExample 1 : a.(a|b)'
-    concat(a, union(a, b)).display()
+    print '\nExample 1 NFA : a.(a|b)'
+    nfa = concat(a, union(a, b))
+    nfa.display()
+    print '\nExample 1 DFA : a.(a|b)'
+    dfa = DFA()
+    dfa.from_nfa(nfa)
+    dfa.display()
+
+    print '\nExample 2 NFA : a.(a|b).b+'
+    nfa = concat(concat(a, union(a, b)), one_or_more(b))
+    nfa.display()
+    print '\nExample 2 DFA : a.(a|b).b+'
+    dfa = DFA()
+    dfa.from_nfa(nfa)
+    dfa.display()
 
     # re = '(1.(((0.0)*)|0).1)'
     # print '\nExample 2 : ' + re

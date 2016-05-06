@@ -26,16 +26,16 @@ void DFATable::addTransition(int from, int to, string symbol){
             this->tb[from][symbol].insert(to);
         }
         else{
-            pair<string, unordered_set<int>> p;
+            pair<string, int_set> p;
             p.first = symbol;
-            p.second = unordered_set<int>{to};
+            p.second = int_set{to};
             this->tb[from].insert(p);
         }
     }
     else{
-        pair<int, table_row> p;
+        pair<int, fa_table_row> p;
         p.first = from;
-        p.second = table_row{{ symbol, unordered_set<int>{to} }};
+        p.second = fa_table_row{{ symbol, int_set{to} }};
         this->tb.insert(p);
 
     }
@@ -63,8 +63,8 @@ State DFA::getState(int i){
 
 void DFA::addState(string name){
     this->states.push_back(State(name));
-    int i = this->states.size() -1;
-    this->table.addTransition(i, i, Symbol::EPSILON);
+//    int i = this->states.size() -1;
+//    this->table.addTransition(i, i, Symbol::EPSILON);
 }
 
 int DFA::countStates() {
@@ -77,7 +77,7 @@ void DFA::addFinalState(int i){
     this->table.addFinalState(i);
 }
 
-unordered_set<int> DFA::getFinalStates(){
+int_set DFA::getFinalStates(){
     return this->finalStateIndexes;
 }
 
@@ -143,9 +143,96 @@ void DFA::displayTable(){
 
 
 DFA DFA::FROM_NFA(NFA nfa){
-    NFATable nfa_tabel = nfa.getTable();
-    unordered_set<string> sets_visited;
-    queue<unordered_set<int>> sets_queue;
-    nfa_tabel.getTable()[0][Symbol::EPSILON];
+    DFA dfa;
+    NFATable nfa_table = nfa.getTable();
+    fa_table nfa_table_map = nfa_table.getTable();
+    unordered_set<string> visited;
+    int_set first_set = nfa_table_map[0][Symbol::EPSILON];
+    queue<int_set> set_queue= queue<int_set>{{first_set}};
+//    set_queue.push(first_set);
+    int dfa_state_count = 0;
+    string set_name = Utils::TO_STRING(first_set);
+    unordered_map<string, int> dfa_state_mapping
+            = unordered_map<string, int> {{ set_name, 0 }};
+    dfa.addState("q" + to_string(0));
+    int nfa_state_count = nfa_table_map.size();
 
+    while (!set_queue.empty()){
+        int_set curr_state_set = set_queue.front();
+        set_queue.pop();
+//        set_name = Utils::TO_STRING(curr_state_set);
+        string state_name = Utils::TO_STRING(curr_state_set);
+        if (visited.find(state_name) != visited.end())
+            continue;
+        visited.insert(state_name);
+        bool is_final_state = false;
+
+        {
+            bool states_visited[nfa_state_count] = { 0 };
+            for (auto st : curr_state_set)
+                states_visited[st] = true;
+
+            for (auto curr_state : curr_state_set){
+                int_set e_closure = nfa_table_map[curr_state][Symbol::EPSILON];
+                for (auto e_closure_state : e_closure){
+                    if (!states_visited[e_closure_state]){
+                        curr_state_set.insert(e_closure_state);
+                        states_visited[e_closure_state] = true;
+                    }
+                }
+            }
+
+//            delete states_visited;
+        }
+
+        for (auto symbol : nfa_table.getAlphabet()){
+            if (symbol == Symbol::EPSILON)
+                continue;
+            int_set next_set;
+            bool states_visited[nfa_state_count] = { 0 };
+            for (auto curr_state : curr_state_set){
+                if (!is_final_state && curr_state == nfa_table.getFinalState())
+                    is_final_state = true;
+                if (nfa_table_map[curr_state].find(symbol) != nfa_table_map[curr_state].end()){
+                    int_set next_states = nfa_table_map[curr_state][symbol];
+                    for (auto ns : next_states){
+                        int_set e_closure = nfa_table_map[ns][Symbol::EPSILON];
+                        for (auto e_closure_state : e_closure){
+                            if (!states_visited[e_closure_state]){
+                                next_set.insert(e_closure_state);
+                                states_visited[e_closure_state] = true;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            string next_state_name = Utils::TO_STRING(next_set);
+            if (next_set.size() > 0){
+                if (dfa_state_mapping.find(next_state_name) == dfa_state_mapping.end()){
+//                    dfa.addState(next_state_name);
+                    dfa_state_count++;
+                    dfa.addState("q" + to_string(dfa_state_count));
+                    dfa_state_mapping.insert({next_state_name, dfa_state_count});
+                }
+                dfa.addTransition(dfa_state_mapping[state_name], dfa_state_mapping[next_state_name], symbol);
+            }
+//            else{
+//                dfa.addTransition(dfa_state_mapping[state_name], 0, symbol);
+//            }
+
+            if (is_final_state)
+                dfa.addFinalState(dfa_state_mapping[state_name]);
+
+            if (next_set.size() > 0 && visited.find(next_state_name) == visited.end()){
+                set_queue.push(next_set);
+            }
+
+//            delete states_visited;
+        }
+
+    }
+
+    return dfa;
 }

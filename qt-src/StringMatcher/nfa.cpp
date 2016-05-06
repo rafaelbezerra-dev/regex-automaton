@@ -10,6 +10,10 @@ void NFATable::setFinalState(int i){
     this->finalStateIndex = i;
 }
 
+int NFATable::getFinalState(){
+    return this->finalStateIndex;
+}
+
 void NFATable::addTransition(int from, int to, string symbol){
     this->alphabet.insert(symbol);
 
@@ -27,16 +31,16 @@ void NFATable::addTransition(int from, int to, string symbol){
             this->tb[from][symbol].insert(to);
         }
         else{
-            pair<string, unordered_set<int>> p;
+            pair<string, int_set> p;
             p.first = symbol;
-            p.second = unordered_set<int>{to};
+            p.second = int_set{to};
             this->tb[from].insert(p);
         }
     }
     else{
-        pair<int, table_row> p;
+        pair<int, fa_table_row> p;
         p.first = from;
-        p.second = table_row{{ symbol, unordered_set<int>{to} }};
+        p.second = fa_table_row{{ symbol, int_set{to} }};
         this->tb.insert(p);
 
     }
@@ -47,7 +51,7 @@ unordered_set<string> NFATable::getAlphabet(){
     return this->alphabet;
 }
 
-table NFATable::getTable(){
+fa_table NFATable::getTable(){
     return this->tb;
 }
 
@@ -65,6 +69,9 @@ NFA::NFA(string regex) : regex(regex){}
 
 NFA::NFA(vector<State> states, int finalState)
     : states(states){
+    int size = states.size();
+    for (int i = 0; i < size; i++)
+        this->table.addTransition(i, i, Symbol::EPSILON);
     this->finalStateIndex = 0;
     this->setFinalState(finalState);
 }
@@ -80,8 +87,9 @@ State NFA::getState(int i)
 }
 
 void NFA::addState(string name){
+    int i = this->states.size();
     this->states.push_back(State(name));
-    int i = this->states.size() -1;
+//  int i = this->states.size() - 1;
     this->table.addTransition(i, i, Symbol::EPSILON);
 }
 
@@ -94,6 +102,10 @@ void NFA::setFinalState(int i){
     this->states[i].setFinal(true);
     this->finalStateIndex = i;
     this->table.setFinalState(i);
+}
+
+int NFA::getFinalState(){
+    return this->finalStateIndex;
 }
 
 void NFA::addTransition(int from, int to, string symbol){

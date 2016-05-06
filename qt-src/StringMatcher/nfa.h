@@ -21,16 +21,16 @@ using namespace std;
 class NFATable
 {
 private:
-//    unordered_map<int, unordered_map<string, unordered_set<int>>> tb;
-    table tb;
+    fa_table tb;
     unordered_set<string> alphabet;
     int finalStateIndex;
 
 public:
     void setFinalState(int i);
+    int getFinalState();
     void addTransition(int from, int to, string symbol);
     unordered_set<string> getAlphabet();
-    table getTable();
+    fa_table getTable();
 };
 
 class NFA
@@ -50,6 +50,7 @@ public:
     void addState(string name);
     int countStates();
     void setFinalState(int i);
+    int getFinalState();
     void addTransition(int from, int to, string symbol);
     vector<Transition> getTransitions();
     void setTransitions(vector<Transition> transitions);

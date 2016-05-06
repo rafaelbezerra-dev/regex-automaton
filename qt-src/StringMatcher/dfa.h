@@ -24,9 +24,9 @@ using namespace std;
 class DFATable
 {
 private:
-    table tb;
+    fa_table tb;
     unordered_set<string> alphabet;
-    unordered_set<int> finalStateIndexes;
+    int_set finalStateIndexes;
 
 public:
     void addFinalState(int i);
@@ -40,7 +40,7 @@ private:
     DFATable table;
     vector<State> states;
     vector<Transition> transitions;
-    unordered_set<int> finalStateIndexes;
+    int_set finalStateIndexes;
     string regex;
 public:
     DFA();
@@ -51,7 +51,7 @@ public:
     void addState(string name);
     int countStates();
     void addFinalState(int i);
-    unordered_set<int> getFinalStates();
+    int_set getFinalStates();
     void addTransition(int from, int to, string symbol);
     vector<Transition> getTransitions();
     void setTransitions(vector<Transition> transitions);

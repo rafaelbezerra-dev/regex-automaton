@@ -114,10 +114,11 @@ compiler_clean:
 
 ####### Compile
 
-debug/main.o: ../StringMatcher/main.cpp ../StringMatcher/nfa.h \
+debug/main.o: ../StringMatcher/main.cpp ../StringMatcher/dfa.h \
 		../StringMatcher/symbol.h \
 		../StringMatcher/transition.h \
 		../StringMatcher/state.h \
+		../StringMatcher/nfa.h \
 		../StringMatcher/utils.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\StringMatcher\main.cpp
 

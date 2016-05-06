@@ -3,27 +3,14 @@
 #include <unordered_map>
 #include <vector>
 
-#include "nfa.h"
+//#include "nfa.h"
+#include "dfa.h"
 #include "utils.h"
 
 using namespace std;
 
 int main(int argc, char *argv[])
 {
-    vector<int> v;
-    v.push_back(1);
-    v.push_back(2);
-    v.push_back(3);
-    cout << Utils::TO_STRING(v) << endl;
-
-    unordered_set<int> s;
-    s.insert(1);
-    s.insert(2);
-    s.insert(3);
-    s.insert(1);
-    cout << Utils::TO_STRING(s) << endl;
-    return 0;
-
     NFA a, b;
 
     cout<<"\nFor the regular expression segment : (a)";
@@ -41,6 +28,16 @@ int main(int argc, char *argv[])
     b.setFinalState(1);
     b.display();
 ////  getch();
+
+
+//    cout<<"\nNFA for : (a.(a|b).(a+))" << endl;
+//    NFA nfa = NFA::CONCAT(NFA::CONCAT(a, NFA::OR(a, b)), NFA::ONE_OR_MORE(a));
+//    nfa.display();
+//    cout << endl << endl;
+//    DFA dfa = DFA::FROM_NFA(nfa);
+//    dfa.display();
+
+//    return 0;
 
     cout<<"\nFor the regular expression segment [Concatenation] : (a.b)";
 //    NFA ab = concat(a, b);
@@ -62,6 +59,22 @@ int main(int argc, char *argv[])
     cout<<"\nFor the regular expression segment [one or more] : (a+)";
     NFA::ONE_OR_MORE(a).display();
 ////  getch();
+
+    cout << "Example 1 : a.(a|b)" << endl;
+    NFA nfa = NFA::CONCAT(a, NFA::OR(a, b));
+    cout << "\n### NFA ###" << endl;
+    nfa.display();
+    DFA dfa = DFA::FROM_NFA(nfa);
+    cout << "\n### DFA ###" << endl;
+    dfa.display();
+
+    cout << "Example 1 : a.(a|b).b+" << endl;
+    nfa = NFA::CONCAT(NFA::CONCAT(a, NFA::OR(a, b)), NFA::ONE_OR_MORE(b));
+    cout << "\n### NFA ###" << endl;
+    nfa.display();
+    dfa = DFA::FROM_NFA(nfa);
+    cout << "\n### DFA ###" << endl;
+    dfa.display();
 
 //    string re;
 //    set<char> symbols;
