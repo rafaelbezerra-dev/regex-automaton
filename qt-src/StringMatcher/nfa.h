@@ -30,7 +30,7 @@ public:
     int getFinalState();
     void addTransition(int from, int to, string symbol);
     unordered_set<string> getAlphabet();
-    fa_table getTable();
+    fa_table getMapping();
 };
 
 class NFA

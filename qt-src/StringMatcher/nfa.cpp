@@ -51,7 +51,7 @@ unordered_set<string> NFATable::getAlphabet(){
     return this->alphabet;
 }
 
-fa_table NFATable::getTable(){
+fa_table NFATable::getMapping(){
     return this->tb;
 }
 

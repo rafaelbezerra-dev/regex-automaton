@@ -9,7 +9,8 @@ SOURCES += main.cpp \
     transition.cpp \
     state.cpp \
     dfa.cpp \
-    utils.cpp
+    utils.cpp \
+    matcher.cpp
 
 HEADERS += \
     nfa.h \
@@ -17,4 +18,5 @@ HEADERS += \
     transition.h \
     state.h \
     dfa.h \
-    utils.h
+    utils.h \
+    matcher.h

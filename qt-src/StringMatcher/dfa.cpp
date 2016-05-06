@@ -41,6 +41,16 @@ void DFATable::addTransition(int from, int to, string symbol){
     }
 }
 
+
+unordered_set<string> DFATable::getAlphabet(){
+    return this->alphabet;
+}
+
+fa_table DFATable::getMapping(){
+    return this->tb;
+}
+
+
 /*************************************
  *
  * ### DFA METHODS IMPLEMENTATIONS ###
@@ -145,7 +155,7 @@ void DFA::displayTable(){
 DFA DFA::FROM_NFA(NFA nfa){
     DFA dfa;
     NFATable nfa_table = nfa.getTable();
-    fa_table nfa_table_map = nfa_table.getTable();
+    fa_table nfa_table_map = nfa_table.getMapping();
     unordered_set<string> visited;
     int_set first_set = nfa_table_map[0][Symbol::EPSILON];
     queue<int_set> set_queue= queue<int_set>{{first_set}};
