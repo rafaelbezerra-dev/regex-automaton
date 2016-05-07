@@ -42,7 +42,7 @@ void change(const char *p){
 					if(stack_s.empty()||stack_s.top()=='|'||stack_s.top()=='.'||stack_s.top()=='(')
 						stack_s.push(*p);
 					else{
-						while(!stack_s.empty()&&(stack_s.top()=='*'||stack_s.top()=='+' || stack_s.top() == '?')){//ĞÂ¶ÁÈë²Ù×÷·ûÓÅÏÈ¼¶´óÓÚSÕ»¶¥²Ù×÷·û,S¶¥²Ù×÷·û³öÕ»,½øT¶Ó,ÔÙºÍSÏÂÒ»Õ»¶¥²Ù×÷·û±È½Ï,Èç´ËÑ­»·
+						while(!stack_s.empty()&&(stack_s.top()=='*'||stack_s.top()=='+' || stack_s.top() == '?')){
 							queue_t.push(stack_s.top());
 							stack_s.pop();
 							queue_t.push(' ');
@@ -85,7 +85,7 @@ void change(const char *p){
 	}
 }
 void output(){
-	cout<<"Reverse Polish Notation£º";
+	cout<<"Reverse Polish Notationï¼š";
 	while(!queue_t.empty()) {
 			cout<<queue_t.front();
 			queue_t.pop();
