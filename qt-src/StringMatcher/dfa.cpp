@@ -50,6 +50,36 @@ fa_table DFATable::getMapping(){
     return this->tb;
 }
 
+void DFATable::generateRecognitionMatix(){
+//    fa_table::const_iterator i = tb.begin();
+    this->recogn_matix.reserve(tb.size());
+    for (auto row = tb.begin(); row != tb.end(); ++row ){
+        int state = row->first;
+        recognition_row recog_row;
+        for (auto inner_row = row->second.begin();
+             inner_row != row->second.end(); ++inner_row ){
+            string symbol = inner_row->first;
+//            int next_state = *i;
+
+        }
+        this->recogn_matix.insert(this->recogn_matix.begin(), state, recog_row);
+    }
+
+}
+
+int DFATable::getNextState(int current_state, char c){
+    string input = "";
+    input += c;
+    recognition_row m = this->recogn_matix[current_state];
+    recognition_row::const_iterator i
+            = m.find(c);
+    if (i != m.end()){
+        return i->second;
+    }
+    else
+        return 0;
+}
+
 
 /*************************************
  *

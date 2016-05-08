@@ -6,20 +6,20 @@ void UNIT_TEST::RUN_ALL(){
          << "*    STARTING UNIT TESTS    *"   << endl
          << "*****************************" << endl
          << endl;
-//    cout << "TEST: NFA_UNMARSHAL_SYMBOL... " << endl;
-//    UNIT_TEST::NFA_UNMARSHAL_SYMBOL();
+    cout << "TEST: NFA_RESOLVE_SYMBOL... " << endl;
+    UNIT_TEST::NFA_RESOLVE_SYMBOL();
 
 //    cout << "TEST: NFA_SHUNTING_YARD... " << endl;
 //    UNIT_TEST::NFA_SHUNTING_YARD();
 
-    cout << "TEST: NFA_FROM_REGEX... " << endl;
-    UNIT_TEST::NFA_FROM_REGEX();
+//    cout << "TEST: NFA_FROM_REGEX... " << endl;
+//    UNIT_TEST::NFA_FROM_REGEX();
 }
-bool UNIT_TEST::NFA_UNMARSHAL_SYMBOL(){
+bool UNIT_TEST::NFA_RESOLVE_SYMBOL(){
 
     string symbol;
-    symbol = "[A-Za-z0-9_]"; cout << "[A-Za-z0-9_]" << endl;
-    unordered_set<char> _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "[A-Za-z0-9_]"; cout << symbol << endl;
+    unordered_set<char> _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\tG = " << std::boolalpha
          << (_sym_.find('G') != _sym_.end()) << endl;
     cout << "\th = " << std::boolalpha
@@ -28,9 +28,11 @@ bool UNIT_TEST::NFA_UNMARSHAL_SYMBOL(){
          << (_sym_.find('6') != _sym_.end()) << endl;
     cout << "\t. = " << std::boolalpha
          << (_sym_.find('.') != _sym_.end()) << endl;
+    cout << "\t_ = " << std::boolalpha
+         << (_sym_.find('_') != _sym_.end()) << endl;
 
-    symbol = "[A-Z]"; cout << "[A-Z]" << endl;
-    _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "[A-Z]"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\tG = " << std::boolalpha
          << (_sym_.find('G') != _sym_.end()) << endl;
     cout << "\th = " << std::boolalpha
@@ -39,37 +41,37 @@ bool UNIT_TEST::NFA_UNMARSHAL_SYMBOL(){
          << (_sym_.find('6') != _sym_.end()) << endl;
 
 
-    symbol = "[0-9]"; cout << "[0-9]" << endl;
-    _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "[0-9]"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\th = " << std::boolalpha
          << (_sym_.find('h') != _sym_.end()) << endl;
     cout << "\t6 = " << std::boolalpha
          << (_sym_.find('6') != _sym_.end()) << endl;
 
-    symbol = "[^0-9]"; cout << "[^0-9]" << endl;
-    _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "[^0-9]"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\th = " << std::boolalpha
          << (_sym_.find('h') != _sym_.end()) << endl;
     cout << "\t6 = " << std::boolalpha
          << (_sym_.find('6') != _sym_.end()) << endl;
 
-    symbol = "[ABC]"; cout << "[ABC]" << endl;
-    _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "[ABC]"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\tB = " << std::boolalpha
          << (_sym_.find('B') != _sym_.end()) << endl;
     cout << "\tD = " << std::boolalpha
          << (_sym_.find('D') != _sym_.end()) << endl;
 
-    symbol = "[^ABC]"; cout << "[^ABC]" << endl;
-    _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "[^ABC]"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\tB = " << std::boolalpha
          << (_sym_.find('B') != _sym_.end()) << endl;
     cout << "\tD = " << std::boolalpha
          << (_sym_.find('D') != _sym_.end()) << endl;
 
 
-    symbol = "^A"; cout << "^A" << endl;
-    _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "^A"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\tA = " << std::boolalpha
          << (_sym_.find('A') != _sym_.end()) << endl;
     cout << "\th = " << std::boolalpha
@@ -77,12 +79,41 @@ bool UNIT_TEST::NFA_UNMARSHAL_SYMBOL(){
     cout << "\t6 = " << std::boolalpha
          << (_sym_.find('6') != _sym_.end()) << endl;
 
-    symbol = "\\["; cout << "\\[" << endl;
-    _sym_ = NFA::UNMARSHAL_SYMBOL(symbol);
+    symbol = "\\["; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
     cout << "\tb = " << std::boolalpha
-         << (_sym_.find('6') != _sym_.end()) << endl;
+         << (_sym_.find('b') != _sym_.end()) << endl;
     cout << "\t[ = " << std::boolalpha
          << (_sym_.find('[') != _sym_.end()) << endl;
+
+    symbol = "\\w"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
+    cout << "\tH = " << std::boolalpha
+         << (_sym_.find('H') != _sym_.end()) << endl;
+    cout << "\tj = " << std::boolalpha
+         << (_sym_.find('j') != _sym_.end()) << endl;
+    cout << "\t8 = " << std::boolalpha
+         << (_sym_.find('8') != _sym_.end()) << endl;
+    cout << "\t_ = " << std::boolalpha
+         << (_sym_.find('_') != _sym_.end()) << endl;
+
+    symbol = "\\s"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
+    cout << "\t\\n = " << std::boolalpha
+         << (_sym_.find('\n') != _sym_.end()) << endl;
+    cout << "\t\\r = " << std::boolalpha
+         << (_sym_.find('\r') != _sym_.end()) << endl;
+    cout << "\tH = " << std::boolalpha
+         << (_sym_.find('H') != _sym_.end()) << endl;
+
+    symbol = "\\S"; cout << symbol << endl;
+    _sym_ = NFA::RESOLVE_SYMBOL(symbol);
+    cout << "\t\\n = " << std::boolalpha
+         << (_sym_.find('\n') != _sym_.end()) << endl;
+    cout << "\t\\r = " << std::boolalpha
+         << (_sym_.find('\r') != _sym_.end()) << endl;
+    cout << "\tH = " << std::boolalpha
+         << (_sym_.find('H') != _sym_.end()) << endl;
 
     return true;
 }

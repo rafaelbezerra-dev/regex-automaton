@@ -12,7 +12,7 @@ public:
 //    UnitTest();
 
     static void RUN_ALL();
-    static bool NFA_UNMARSHAL_SYMBOL();
+    static bool NFA_RESOLVE_SYMBOL();
     static bool NFA_SHUNTING_YARD();
     static bool NFA_FROM_REGEX();
 };

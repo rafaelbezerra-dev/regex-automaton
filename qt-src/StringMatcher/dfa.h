@@ -7,6 +7,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 #include <stack>
 #include <queue>
 #include <utility>
@@ -19,6 +20,8 @@
 
 using namespace std;
 
+using recognition_row = unordered_map<char, int>;
+using recognition_matix = vector<recognition_row>;
 
 
 class DFATable
@@ -26,6 +29,8 @@ class DFATable
 private:
     fa_table tb;
     unordered_set<string> alphabet;
+//    vector<unordered_map<char, int>> recognition_matix;
+    recognition_matix recogn_matix;
     int_set finalStateIndexes;
 
 public:
@@ -33,6 +38,8 @@ public:
     void addTransition(int from, int to, string symbol);
     unordered_set<string> getAlphabet();
     fa_table getMapping();
+    void generateRecognitionMatix();
+    int getNextState(int current_state, char c);
 };
 
 

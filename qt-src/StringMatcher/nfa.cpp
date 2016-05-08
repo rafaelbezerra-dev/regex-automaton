@@ -1,10 +1,10 @@
 #include "nfa.h"
 
-/*******************************************
- *
- * ### NFA TABLE METHODS IMPLEMENTATIONS ###
- *
- *******************************************/
+/*********************************************
+ *                                           *
+ * ### NFA TABLE METHODS IMPLEMENTATIONS ### *
+ *                                           *
+ *********************************************/
 
 void NFATable::setFinalState(int i){
     this->finalStateIndex = i;
@@ -55,11 +55,11 @@ fa_table NFATable::getMapping(){
     return this->tb;
 }
 
-/*************************************
- *
- * ### NFA METHODS IMPLEMENTATIONS ###
- *
- *************************************/
+/***************************************
+ *                                     *
+ * ### NFA METHODS IMPLEMENTATIONS ### *
+ *                                     *
+ ***************************************/
 
 NFA::NFA(){
     this->finalStateIndex = 0;
@@ -168,11 +168,12 @@ void NFA::displayTable(){
 }
 
 
-/********************************************
- *
- * ### NFA STATIC METHODS IMPLEMENTATIONS ###
- *
- ********************************************/
+/**********************************************
+ *                                            *
+ * ### NFA STATIC METHODS IMPLEMENTATIONS ### *
+ * ### THOMPSON'S CONSTRUCTION METHODS    ### *
+ *                                            *
+ **********************************************/
 
 NFA NFA::CONCAT(NFA left, NFA right){
     int nStates = left.countStates() + right.countStates() - 1;
@@ -291,13 +292,24 @@ NFA NFA::ONE_OR_MORE(NFA nfa){
 
 }
 
-unordered_set<char> NFA::UNMARSHAL_SYMBOL(string symbol){
+
+/**********************************************
+ *                                            *
+ * ### NFA STATIC METHODS IMPLEMENTATIONS ### *
+ * ### REGEX PROCESSING METHODS           ### *
+ *                                            *
+ **********************************************/
+
+unordered_set<char> NFA::RESOLVE_SYMBOL(string symbol){
     uint8_t number_of_chars = 128;
     unordered_set<char> _opr_ = {'[','-',']','\\', '^', '(', ')'};
     unordered_set<char> _sym_;
     stack<char> opr_stack;
     stack<char> sym_stack;
     // [A-Z], [A-C], [0-9], a, A, ^A,[A-Za-z0-9_]
+    unordered_map<string, string>::const_iterator i = Symbol::SYMBOL_MAPPING.find(symbol);
+    if (i != Symbol::SYMBOL_MAPPING.end())
+        symbol = i->second;
 
     for (auto ch : symbol){
 
@@ -359,7 +371,7 @@ unordered_set<char> NFA::UNMARSHAL_SYMBOL(string symbol){
                             _sym_.insert(c);
                     else
                         for (int i = 0; i < number_of_chars; i++)
-                            if (char_set.find((char)i) != char_set.end())
+                            if (char_set.find((char)i) == char_set.end())
                                 _sym_.insert((char)i);
                 }
                 break;
@@ -380,6 +392,9 @@ unordered_set<char> NFA::UNMARSHAL_SYMBOL(string symbol){
         else
             _sym_.insert(c);
     }
+
+    Symbol::ADD_RESOVLED_SYMBOLS(symbol, _sym_);
+
     return _sym_;
 }
 
@@ -466,133 +481,9 @@ string NFA::SHUNTING_YARD_STRING(string regex){
     return __out__;
 }
 
-/*NFA NFA::FROM_REGEX(string regex){
-    //([A-Z])\w+
-
-    NFA nfa;
-    uint8_t __n_chars__ = 128;
-    unordered_set<char> __opr__ = {'[','-',']','\\', '^', '(', ')', '|', '*', '+', '?'};
-    stack<char> opr_stack;
-    stack<char> sym_stack;
-    stack<char> chr_stack;
-    stack<NFA> nfa_stack;
-
-    for (auto c : regex){
-        chr_stack.push(c);
-        if (__opr__.find(c) != __opr__.end())
-            opr_stack.push(c);
-    }
-
-    while(!chr_stack.empty()){
-        char c = chr_stack.top();
-        chr_stack.pop();
-
-        if (__opr__.find(c) == __opr__.end()){
-            //TODO: process symbol
-        } else {
-            if (c == '['){
-            }
-            else if (c == '-'){
-            }
-            else if (c == ']'){
-            }
-            else if (c == '\\'){
-            }
-            else if (c == '^'){
-            }
-            else if (c == '('){
-            }
-            else if (c == ')'){
-            }
-            else if (c == '|'){
-            }
-            else if (c == '*'){
-            }
-            else if (c == '+'){
-            }
-            else if (c == '?'){
-
-            }
-        }
-
-    }
-
-    return nfa;
-}*/
-/*NFA NFA::FROM_REGEX(string regex){
-    //([A-Z])\w+
-
-    NFA nfa;
-    uint8_t __n_chars__ = 128;
-    unordered_set<char> __opr__ = {'[','-',']','\\', '^', '(', ')', '|', '*', '+', '?'};
-    stack<char> opr_stack;
-    stack<string> sym_stack;
-//    stack<char> chr_stack;
-    stack<NFA> nfa_stack;
-    NFA new_nfa;
-
-    for (auto c : regex){
-        sym_stack.push(c);
-        if (__opr__.find(c) != __opr__.end())
-            opr_stack.push(c);
-
-        if (__opr__.find(c) == __opr__.end()){
-            //TODO: process symbol
-
-
-//            string str_symbol = "" + c;
-
-//            if (opr_stack.top() != '[') {
-//                if (opr_stack.top() == '^' || opr_stack.top() == '\\') {
-//                    str_symbol = opr_stack.top() + str_symbol;
-//                    opr_stack.pop();
-//                    sym_stack.pop(); // pop char
-//                    sym_stack.pop(); // pop operator
-//                }
-//                new_nfa = NFA({State("q0"), State("q1")}, 1);
-//                new_nfa.addTransition(0, 1, c);
-//                nfa_stack.push(new_nfa);
-//            }
-
-//            sym_stack.push(str_symbol);
-            if (opr_stack.top() == '|'){
-            }
-        } else {
-            if (c == '['){
-            }
-            else if (c == '-'){
-            }
-            else if (c == ']'){
-            }
-            else if (c == '\\'){
-            }
-            else if (c == '^'){
-            }
-            else if (c == '('){
-            }
-            else if (c == ')'){
-            }
-            else if (c == '*'){
-
-            }
-            else if (c == '+'){
-            }
-            else if (c == '?'){
-
-            }
-        }
-    }
-
-    return nfa;
-}
-
-
-*/
-
-
 NFA NFA::FROM_REGEX(string regex){
     // (A|a).b*|(c|d) ---> Aa|b*.cd||
-    uint8_t __n_chars__ = 128;
+//    uint8_t __n_chars__ = 128;
     string __aux__;
     unordered_set<char> __opr__ = {'[','-',']','\\', '^', '(', ')', '|', '*', '+', '?', '.'};
     vector<char> __regx__ = NFA::SHUNTING_YARD(regex);
@@ -619,7 +510,7 @@ NFA NFA::FROM_REGEX(string regex){
             if (!__keep_chars__){
                 new_nfa = new NFA("q0", "q1", __aux__);
                 __NFAs__.push(*new_nfa);
-                NFA::UNMARSHAL_SYMBOL(__aux__);
+                NFA::RESOLVE_SYMBOL(__aux__);
             }
 
         } else {
@@ -641,7 +532,7 @@ NFA NFA::FROM_REGEX(string regex){
                     __chars_kept__ += c;
                     new_nfa = new NFA("q0", "q1", __chars_kept__);
                     __NFAs__.push(*new_nfa);
-                    NFA::UNMARSHAL_SYMBOL(__aux__);
+                    NFA::RESOLVE_SYMBOL(__aux__);
                 }
                 else{
                     __chars_kept__ += c;
