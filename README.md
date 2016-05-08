@@ -1,6 +1,6 @@
-#Finite State Machine
+# Finite State Machine
 
-##Team Members
+## Team Members
 
 * Jiabin Xiang
 * Xiaotian Zhang
@@ -10,12 +10,12 @@
 The tasks that each member will be doing still need to be defined as at this moment the system is still being modeled.
 
 
-##Proposal
+## Proposal
 The goals of this project are [1] to develop a regex stack-based grammar parser that can receive patterns, validate them and create a state machine that will [2] search for string patterns with a complexity of O(n).
 
 In order to get the complexity as low as O(n) a data structure based on tries will be used. An array of pointers will be used to access a linked list that represents the sentence which the pattern will be matched against.
 
-##Testing
+## Evaluation
 The code will be tested on many standard patterns using a set of sentences. The following items will be evaluated:
 
 1. The regex correctness: the code shall parse the regex and inform if any error is encountered
@@ -23,7 +23,25 @@ The code will be tested on many standard patterns using a set of sentences. The 
 
 The code will also be benchmarked against the default C++ regex library.
 
-##References
+## Running
+##### Usage:
+```
+regx -r [REGULAR EXPRESSION] -f [FULL PATH OF A FILE]
+regx --regex [REGULAR EXPRESSION] --file [FULL PATH OF A FILE]
+```
+
+##### Notes:
+* Define regular expretions starting and ending with quotation marks
+* Explicitly define the concatenations with a ".".
+
+##### Windows Example:
+```bash
+> cd qt-src\
+> regx -r "[A-Z].\w+" -f c:\regex_test\lorem_ipsum.txt
+```
+
+
+## References
 *  [Code Project Tutorial](http://www.codeproject.com/Articles/5412/Writing-own-regular-expression-parser)
 *  [Thompson's Construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
 *  [Shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
