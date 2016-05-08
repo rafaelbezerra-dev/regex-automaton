@@ -21,4 +21,5 @@ HEADERS += \
     dfa.h \
     utils.h \
     matcher.h \
-    unittest.h
+    unittest.h \
+    console_color.h

@@ -4,18 +4,82 @@ void UNIT_TEST::RUN_ALL(){
 
     cout << "*****************************" << endl
          << "*    STARTING UNIT TESTS    *"   << endl
-         << "*****************************" << endl
-         << endl;
-//    cout << "TEST: NFA_RESOLVE_SYMBOL... " << endl;
+         << "*****************************" << endl;
+
+//    cout << "\n\nTEST: CONSTRUCTIONS... " << endl;
+//    UNIT_TEST::CONSTRUCTIONS();
+
+//    cout << "\n\nTEST: NFA_RESOLVE_SYMBOL... " << endl;
 //    UNIT_TEST::NFA_RESOLVE_SYMBOL();
 
-//    cout << "TEST: NFA_SHUNTING_YARD... " << endl;
+//    cout << "\n\nTEST: NFA_SHUNTING_YARD... " << endl;
 //    UNIT_TEST::NFA_SHUNTING_YARD();
 
-    cout << "TEST: NFA_FROM_REGEX... " << endl;
-    UNIT_TEST::NFA_FROM_REGEX();
+//    cout << "\n\nTEST: NFA_FROM_REGEX... " << endl;
+//    UNIT_TEST::NFA_FROM_REGEX();
+
+    cout << "\n\nTEST: NFA_FROM_REGEX2... " << endl;
+    UNIT_TEST::MATCHER_MATCH_FILE();
 }
-bool UNIT_TEST::NFA_RESOLVE_SYMBOL(){
+
+void UNIT_TEST::CONSTRUCTIONS(){
+
+    NFA a, b;
+
+    cout<<"\nFor the regular expression segment : (a)";
+    a.addState("q0");
+    a.addState("q1");
+    a.addTransition(0, 1, "a");
+    a.setFinalState(1);
+    a.display();
+//  getch();
+
+    cout<<"\nFor the regular expression segment : (b)";
+    b.addState("q0");
+    b.addState("q1");
+    b.addTransition(0, 1, "b");
+    b.setFinalState(1);
+    b.display();
+//  getch();
+
+    cout<<"\nFor the regular expression segment [Concatenation] : (a.b)";
+    NFA::CONCAT(a, b).display();
+//  getch();
+
+    cout<<"\nFor the regular expression segment [Or] : (a|b)";
+    NFA::OR(a, b).display();
+//  getch();
+
+    cout<<"\nFor the regular expression segment [zero or one] : (a?)";
+    NFA::ZERO_OR_ONE(a).display();
+//  getch();
+
+    cout<<"\nFor the regular expression segment [zero or more] : (a*)";
+    NFA::ZERO_OR_MORE(a).display();
+//  getch();
+
+    cout<<"\nFor the regular expression segment [one or more] : (a+)";
+    NFA::ONE_OR_MORE(a).display();
+//  getch();
+
+    cout << "Example 1 : a.(a|b)" << endl;
+    NFA nfa = NFA::CONCAT(a, NFA::OR(a, b));
+    cout << "\n### NFA ###" << endl;
+    nfa.display();
+    DFA dfa = DFA::FROM_NFA(nfa);
+    cout << "\n### DFA ###" << endl;
+    dfa.display();
+
+    cout << "Example 1 : a.(a|b).b+" << endl;
+    nfa = NFA::CONCAT(NFA::CONCAT(a, NFA::OR(a, b)), NFA::ONE_OR_MORE(b));
+    cout << "\n### NFA ###" << endl;
+    nfa.display();
+    dfa = DFA::FROM_NFA(nfa);
+    cout << "\n### DFA ###" << endl;
+    dfa.display();
+}
+
+void UNIT_TEST::NFA_RESOLVE_SYMBOL(){
 
     string symbol;
     symbol = "[A-Za-z0-9_]"; cout << symbol << endl;
@@ -115,10 +179,10 @@ bool UNIT_TEST::NFA_RESOLVE_SYMBOL(){
     cout << "\tH = " << std::boolalpha
          << (_sym_.find('H') != _sym_.end()) << endl;
 
-    return true;
+//    return true;
 }
 
-bool UNIT_TEST::NFA_SHUNTING_YARD(){
+void UNIT_TEST::NFA_SHUNTING_YARD(){
 
 //    for (auto s : NFA::SHUNTING_YARD("a.b*|c")){
 //        cout << s << endl
@@ -128,17 +192,17 @@ bool UNIT_TEST::NFA_SHUNTING_YARD(){
     cout << "\"(A|a).b*|(c|d)\"  ->  \"ab*.c|\" --- result: " << NFA::SHUNTING_YARD_STRING("(A|a).b*|(c|d)") << endl;
     cout << "\"[A-Z].\\w+\"  ->  \"[A-Z]\\w+.\" --- result: " << NFA::SHUNTING_YARD_STRING("[A-Z].\\w+") << endl;
     cout << "\"[^0-9].\\w+\"  ->  \"[^0-9]\\w+.\" --- result: " << NFA::SHUNTING_YARD_STRING("[^0-9].\\w+") << endl;
-    return true;
+//    return true;
 }
 
-bool UNIT_TEST::NFA_FROM_REGEX(){
+void UNIT_TEST::NFA_FROM_REGEX(){
     string src;
     string rgx;
 //    string rgx = "(A|a).b*|(c|d)";
 //    rgx = "r.a.f.a.e.l";
 //    rgx = "a.b+";
-//    rgx = "(a.a|b.b).a*";
-    rgx = "[A-Z].\\w+";
+    rgx = "(a.a|b.b).a*";
+//    rgx = "[A-Z].\\w+";
 
 
     cout << "Regex: " << rgx;
@@ -164,5 +228,27 @@ bool UNIT_TEST::NFA_FROM_REGEX(){
 
 
     src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
-    Matcher::MATCH(src, dfa);
+    vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
+    Matcher::PRINT_NICELY(src, res);
+//    return true;
+}
+
+void UNIT_TEST::MATCHER_MATCH_FILE(){
+    string file = "C:\\Projects\\Git\\stevens\\regexp-project\\qt-src\\StringMatcher\\Latin-Lipsum.txt";
+    string rgx = "[A-Z].\\w+";
+
+    cout << "File: " << file;
+    cout << "Regex: " << rgx;
+
+    string rgx_postfix = NFA::SHUNTING_YARD_STRING(rgx);
+    cout << "\t PostFix: " << rgx_postfix << endl;
+    NFA nfa = NFA::FROM_REGEX(rgx);
+    cout << "\nNFA" << endl;
+    nfa.display();
+    cout << "\nDFA" << endl;
+    DFA dfa = DFA::FROM_NFA(nfa);
+    dfa.display();
+    dfa.generateRecognitionMatix();
+    Matcher::MATCH_FILE(file, dfa, true);
+//    return true;
 }

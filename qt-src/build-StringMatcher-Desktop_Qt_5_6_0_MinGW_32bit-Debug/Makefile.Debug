@@ -69,7 +69,8 @@ DIST          =  nfa.h \
 		dfa.h \
 		utils.h \
 		matcher.h \
-		unittest.h ..\StringMatcher\main.cpp \
+		unittest.h \
+		console_color.h ..\StringMatcher\main.cpp \
 		..\StringMatcher\nfa.cpp \
 		..\StringMatcher\symbol.cpp \
 		..\StringMatcher\transition.cpp \
@@ -128,6 +129,7 @@ debug/main.o: ../StringMatcher/main.cpp ../StringMatcher/dfa.h \
 		../StringMatcher/state.h \
 		../StringMatcher/nfa.h \
 		../StringMatcher/utils.h \
+		../StringMatcher/console_color.h \
 		../StringMatcher/matcher.h \
 		../StringMatcher/unittest.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\main.o ..\StringMatcher\main.cpp
@@ -136,7 +138,8 @@ debug/nfa.o: ../StringMatcher/nfa.cpp ../StringMatcher/nfa.h \
 		../StringMatcher/symbol.h \
 		../StringMatcher/transition.h \
 		../StringMatcher/state.h \
-		../StringMatcher/utils.h
+		../StringMatcher/utils.h \
+		../StringMatcher/console_color.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\nfa.o ..\StringMatcher\nfa.cpp
 
 debug/symbol.o: ../StringMatcher/symbol.cpp ../StringMatcher/symbol.h
@@ -156,10 +159,12 @@ debug/dfa.o: ../StringMatcher/dfa.cpp ../StringMatcher/dfa.h \
 		../StringMatcher/transition.h \
 		../StringMatcher/state.h \
 		../StringMatcher/nfa.h \
-		../StringMatcher/utils.h
+		../StringMatcher/utils.h \
+		../StringMatcher/console_color.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\dfa.o ..\StringMatcher\dfa.cpp
 
-debug/utils.o: ../StringMatcher/utils.cpp ../StringMatcher/utils.h
+debug/utils.o: ../StringMatcher/utils.cpp ../StringMatcher/utils.h \
+		../StringMatcher/console_color.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\utils.o ..\StringMatcher\utils.cpp
 
 debug/matcher.o: ../StringMatcher/matcher.cpp ../StringMatcher/matcher.h \
@@ -168,7 +173,8 @@ debug/matcher.o: ../StringMatcher/matcher.cpp ../StringMatcher/matcher.h \
 		../StringMatcher/transition.h \
 		../StringMatcher/state.h \
 		../StringMatcher/nfa.h \
-		../StringMatcher/utils.h
+		../StringMatcher/utils.h \
+		../StringMatcher/console_color.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\matcher.o ..\StringMatcher\matcher.cpp
 
 debug/unittest.o: ../StringMatcher/unittest.cpp ../StringMatcher/unittest.h \
@@ -177,6 +183,7 @@ debug/unittest.o: ../StringMatcher/unittest.cpp ../StringMatcher/unittest.h \
 		../StringMatcher/transition.h \
 		../StringMatcher/state.h \
 		../StringMatcher/utils.h \
+		../StringMatcher/console_color.h \
 		../StringMatcher/dfa.h \
 		../StringMatcher/matcher.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\unittest.o ..\StringMatcher\unittest.cpp
