@@ -163,6 +163,6 @@ bool UNIT_TEST::NFA_FROM_REGEX(){
 //    cout << "1[;] -> " << dfa.getTable().getNextState(1, ';') << endl;
 
 
-//    src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
-//    Matcher::MATCH(src, dfa);
+    src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
+    Matcher::MATCH(src, dfa);
 }
