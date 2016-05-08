@@ -8,8 +8,10 @@ void UNIT_TEST::RUN_ALL(){
          << endl;
 //    cout << "TEST: NFA_UNMARSHAL_SYMBOL... " << endl;
 //    UNIT_TEST::NFA_UNMARSHAL_SYMBOL();
+
 //    cout << "TEST: NFA_SHUNTING_YARD... " << endl;
 //    UNIT_TEST::NFA_SHUNTING_YARD();
+
     cout << "TEST: NFA_FROM_REGEX... " << endl;
     UNIT_TEST::NFA_FROM_REGEX();
 }
@@ -85,7 +87,6 @@ bool UNIT_TEST::NFA_UNMARSHAL_SYMBOL(){
     return true;
 }
 
-
 bool UNIT_TEST::NFA_SHUNTING_YARD(){
 
 //    for (auto s : NFA::SHUNTING_YARD("a.b*|c")){
@@ -105,7 +106,8 @@ bool UNIT_TEST::NFA_FROM_REGEX(){
 //    string rgx = "(A|a).b*|(c|d)";
 //    rgx = "r.a.f.a.e.l";
 //    rgx = "a.b+";
-    rgx = "(a.a|b.b).(a|b)+";
+//    rgx = "(a.a|b.b).a*";
+    rgx = "[A-Z].\\w+";
 
 
     cout << "Regex: " << rgx;
@@ -118,6 +120,6 @@ bool UNIT_TEST::NFA_FROM_REGEX(){
     DFA dfa = DFA::FROM_NFA(nfa);
     dfa.display();
 
-    src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
-    Matcher::MATCH(src, dfa);
+//    src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
+//    Matcher::MATCH(src, dfa);
 }

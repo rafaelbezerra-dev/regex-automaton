@@ -76,6 +76,11 @@ NFA::NFA(vector<State> states, int finalState)
     this->setFinalState(finalState);
 }
 
+NFA::NFA(string s1,string s2, string trans_symbol)
+    : NFA({State(s1), State(s2)}, 1){
+    this->addTransition(0, 1, trans_symbol);
+}
+
 vector<State> NFA::getStates()
 {
     return this->states;
@@ -387,6 +392,7 @@ vector<char> NFA::SHUNTING_YARD(string regex){
         {'?', 4},
         {'*', 4},
         {'+', 4},
+//        {'\\', 5},
 //        {'^', 5} // uncomment this line to have [^0-9] transformed to [0-9]^
     };
     unordered_map<char, int>::const_iterator top_itr, current_itr;
@@ -592,26 +598,73 @@ NFA NFA::FROM_REGEX(string regex){
     vector<char> __regx__ = NFA::SHUNTING_YARD(regex);
     stack<NFA> __NFAs__;
     NFA *new_nfa;
+    bool __keep_chars__ = false;
+    string __chars_kept__ = "";
 
     for (auto c : __regx__){
         if (__opr__.find(c) == __opr__.end()){
-            //TODO: process symbol
+            //TODO: process symbo
             __aux__ = "";
             __aux__ += c;
-            new_nfa = new NFA({State("q0"), State("q1")}, 1);
-            new_nfa->addTransition(0, 1, __aux__);
-            __NFAs__.push(*new_nfa);
-//            NFA::UNMARSHAL_SYMBOL(__aux__);
+
+            if (__keep_chars__){
+                if (__chars_kept__ == "\\" || __chars_kept__ == "^"){
+                    __aux__ = __chars_kept__ + __aux__;
+                    __keep_chars__ = false;
+                }
+
+                __chars_kept__ += c;
+            }
+
+            if (!__keep_chars__){
+                new_nfa = new NFA("q0", "q1", __aux__);
+                __NFAs__.push(*new_nfa);
+                NFA::UNMARSHAL_SYMBOL(__aux__);
+            }
+
         } else {
             if (c == '['){
+                if (!__keep_chars__){
+                    __keep_chars__ = true;
+                    __chars_kept__ = "[";
+                }
+                else{
+                    __chars_kept__ += c;
+                }
             }
             else if (c == '-'){
+                __chars_kept__ += c;
             }
             else if (c == ']'){
+                if (__keep_chars__){
+                    __keep_chars__ = false;
+                    __chars_kept__ += c;
+                    new_nfa = new NFA("q0", "q1", __chars_kept__);
+                    __NFAs__.push(*new_nfa);
+                    NFA::UNMARSHAL_SYMBOL(__aux__);
+                }
+                else{
+                    __chars_kept__ += c;
+                }
+
             }
             else if (c == '\\'){
+                if (!__keep_chars__){
+                    __keep_chars__ = true;
+                    __chars_kept__ = "\\";
+                }
+                else{
+                    __chars_kept__ += c;
+                }
             }
             else if (c == '^'){
+                if (!__keep_chars__){
+                    __keep_chars__ = true;
+                    __chars_kept__ = "^";
+                }
+                else{
+                    __chars_kept__ += c;
+                }
             }
             else if (c == '('){
             }

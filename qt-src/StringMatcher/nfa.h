@@ -46,6 +46,7 @@ public:
     NFA();    
     NFA(string regex);
     NFA(vector<State> states, int finalState);
+    NFA(string s1, string s2, string trans_symbol);
     vector<State> getStates();
     State getState(int i);
     void addState(string name);
@@ -65,6 +66,7 @@ public:
     static NFA ZERO_OR_MORE(NFA nfa);
     static NFA ZERO_OR_ONE(NFA nfa);
     static NFA ONE_OR_MORE(NFA nfa);
+
 
 
     static unordered_set<char> UNMARSHAL_SYMBOL(string symbol);
