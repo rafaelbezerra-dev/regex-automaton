@@ -131,7 +131,7 @@ void NFA::setTable(NFATable table){
 
 
 void NFA::display(){
-    cout<<"\n";
+//    cout<<"\n";
     Transition trans;
     for(unsigned int i = 0; i < this->transitions.size(); i++) {
         trans = this->transitions.at(i);
@@ -648,6 +648,9 @@ NFA NFA::FROM_REGEX(string regex){
             }
         }
     }
+
+    NFA res = __NFAs__.top();
+    return res;
 }
 
 

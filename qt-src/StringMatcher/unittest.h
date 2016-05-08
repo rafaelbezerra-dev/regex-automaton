@@ -2,6 +2,9 @@
 #define UNITTEST_H
 
 #include "nfa.h"
+#include "dfa.h"
+#include "matcher.h"
+#include "utils.h"
 
 class UNIT_TEST
 {

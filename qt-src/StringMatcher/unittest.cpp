@@ -100,10 +100,24 @@ bool UNIT_TEST::NFA_SHUNTING_YARD(){
 }
 
 bool UNIT_TEST::NFA_FROM_REGEX(){
-    string rgx = "(A|a).b*|(c|d)";
+    string src;
+    string rgx;
+//    string rgx = "(A|a).b*|(c|d)";
+//    rgx = "r.a.f.a.e.l";
+//    rgx = "a.b+";
+    rgx = "(a.a|b.b).(a|b)+";
+
+
     cout << "Regex: " << rgx;
     string rgx_postfix = NFA::SHUNTING_YARD_STRING(rgx);
-    cout << "\t PostFix: " << rgx << endl;
+    cout << "\t PostFix: " << rgx_postfix << endl;
+    NFA nfa = NFA::FROM_REGEX(rgx);
+    cout << "\nNFA" << endl;
+    nfa.display();
+    cout << "\nDFA" << endl;
+    DFA dfa = DFA::FROM_NFA(nfa);
+    dfa.display();
 
-
+    src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
+    Matcher::MATCH(src, dfa);
 }

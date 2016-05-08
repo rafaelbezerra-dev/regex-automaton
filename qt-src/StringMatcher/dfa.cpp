@@ -113,7 +113,7 @@ void DFA::setTable(DFATable table){
 }
 
 void DFA::display(){
-    cout<<"\n";
+//    cout<<"\n";
     Transition trans;
     for(unsigned int i = 0; i < this->transitions.size(); i++) {
         trans = this->transitions.at(i);

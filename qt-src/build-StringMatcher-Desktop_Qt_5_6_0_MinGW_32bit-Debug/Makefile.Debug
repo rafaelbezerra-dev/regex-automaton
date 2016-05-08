@@ -176,7 +176,9 @@ debug/unittest.o: ../StringMatcher/unittest.cpp ../StringMatcher/unittest.h \
 		../StringMatcher/symbol.h \
 		../StringMatcher/transition.h \
 		../StringMatcher/state.h \
-		../StringMatcher/utils.h
+		../StringMatcher/utils.h \
+		../StringMatcher/dfa.h \
+		../StringMatcher/matcher.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o debug\unittest.o ..\StringMatcher\unittest.cpp
 
 ####### Install

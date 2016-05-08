@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 //    Matcher::MATCH(src, dfa);
 
     src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
-    cout << "\n\nExample 3 : (u).(m).( ) " << endl;
+    cout << "\n\nExample 3 : a.b+ " << endl;
     nfa = NFA::CONCAT(a, NFA::ONE_OR_MORE(b));
     cout << "\n### NFA ###" << endl;
     nfa.display();
