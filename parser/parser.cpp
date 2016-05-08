@@ -2,18 +2,20 @@
 #include <string>
 #include <vector>
 #include <set>
+#include <map>
 using namespace std;
 
 char op[4] = {'+','*','?','|'};
 char es[24] = {'t','n','v','f','r','0','c','x','u','.','\\','+','*','?','^','$','[',']','{','}','[',']','|','/'};
 char se[6] = {'w','W','d','D','s','S'};
 
+
 class Regex_Patterns {
 private:
     //quantifier: (1){n} (2){n,} (3){n,m}
     
     //operator: (1)+ (2)* (3)?   (4)| (5).
-    set<char> oper;
+    set<char> oper; // all operators will be saved in this set.
     
     //set[]:
         // .[^\n]
@@ -23,7 +25,8 @@ private:
         // \D
         // \s[\f\n\r\t\v\u00A0\u2028\u2029] (spaces,tabs,linbreaks)
         // \S
-    set<char> sets;
+    set<char> sets; // all sets will be saved in this set
+    map<string,string> sets_map;
     
     //group()
     
@@ -40,7 +43,7 @@ private:
         // \uhhhh unicode
     
         // \(.46) (\92) (+43) (*42) (?63) (^94) ($36) ([91) (]93) ({123) (}125) [(40] [)41] (|124) (/47)
-    set<char> escape;
+    set<char> escape; // all escaped charaters will be saved in this set
     
     
     //Anchor:
@@ -50,27 +53,25 @@ private:
         // \B
     //back reference
         // \positive int
-    string reg_exp;
-    vector<string> inorder;
+    string reg_exp; // input value will be saved in this string
+    vector<string> inorder; // this is the in-order output
     
 public:
     string::iterator it_l,it_r;
     Regex_Patterns(string s) : reg_exp(s){
         it_l = reg_exp.begin();
         it_r = it_l;
-        oper = set<char>(op, op+4);
-        escape = set<char>(es,es+24);
-        sets = set<char>(se, se+6);
+        
+        sets_map["."]="[^\n]";
+        sets_map["\\w"]="[a-zA-Z0-9_]";
+        sets_map["\\W"]="[^a-zA-Z0-9_]";
+        sets_map["\\d"]="[0-9]";
+        sets_map["\\D"]="[^0-9]";
+        sets_map["\\s"]="[\f\n\r\t\v\u00A0\u2028\u2029]";
+        sets_map["\\S"]="[^\f\n\r\t\v\u00A0\u2028\u2029]";
+        
     }
     
-    bool isQuantifier() {
-        if (*it_r == '{') {
-            while (*(it_r++) != '}');
-            //cout << it_r - it_l << endl;
-            return true;
-        }
-        return false;
-    }
     bool isOperator() {
         if (oper.find(*it_l) != oper.end()) {
             it_r++;
@@ -78,6 +79,7 @@ public:
         }
         return false;
     }
+    
     bool isSet() {
         if (*it_l == '.'){
             it_r++;
@@ -121,31 +123,50 @@ public:
         }
         return false;
     }
-    /* will implement later
-    bool isBack() {
+    
+    bool isQuantifier() {
+        if (*it_l == '{') {
+            while (*(it_r++) != ')');
+            return true;
+        }
+        return false;
+    }
+    /*
+    void quantifier_translation() {
         
     }
-    */
     
-    bool isSpecial() {
-        return isSet() || isGroup() || isEscape() || isAnchor();
+    void split() {
+    
     }
-    
+    */
 
     void split() {
         while (it_r != reg_exp.end()) {
-            if (isSet()||isGroup()||isEscape()||isAnchor()) {
+            if (isGroup()||isEscape()||isAnchor()) {
                 isQuantifier();
                 inorder.push_back(reg_exp.substr( it_l-reg_exp.begin(), it_r-it_l ));
                 it_l = it_r;
-            }
-            else {
+            } else if(isSet()) {
+                if (*it_l == '[') {
+                    isQuantifier();
+                    inorder.push_back(reg_exp.substr( it_l-reg_exp.begin(), it_r-it_l ));
+                    it_l = it_r;
+                } else {
+                    string temp_set = sets_map.find( reg_exp.substr(it_l-reg_exp.begin(), it_r-it_l) )->second;
+                    it_l = it_r;
+                    isQuantifier();
+                    inorder.push_back(temp_set + reg_exp.substr( it_l-reg_exp.begin(), it_r-it_l ));
+                    it_l = it_r;
+                }
+            } else {
                 it_r++;
                 inorder.push_back(reg_exp.substr( it_l-reg_exp.begin(), it_r-it_l ));
                 it_l = it_r;
             }
         }
     }
+
     
     void show() {
         for (vector<string>::iterator it = inorder.begin(); it != inorder.end(); ++it)
