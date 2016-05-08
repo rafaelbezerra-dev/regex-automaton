@@ -26,3 +26,6 @@ The code will also be benchmarked against the default C++ regex library.
 ##References
 *  [Code Project Tutorial](http://www.codeproject.com/Articles/5412/Writing-own-regular-expression-parser)
 *  [Thompson's Construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
+*  [Shunting-yard algorithm](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
+*  [Shunting-yard algorithm for Regex](http://jacobappleton.io/2015/07/02/regex-ii-the-shunting-yard-algorithm/)
+*  [Shunting-yard algorithm Implementation in Java](https://gist.github.com/gmenard/6161825)
