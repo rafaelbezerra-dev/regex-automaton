@@ -21,6 +21,7 @@ public:
 //    string get();
 
     static void ADD_RESOVLED_SYMBOLS(string symbol, unordered_set<char> resolution);
+    static string MAP(string symbol);
 
 };
 

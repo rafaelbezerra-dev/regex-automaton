@@ -52,19 +52,30 @@ fa_table DFATable::getMapping(){
 
 void DFATable::generateRecognitionMatix(){
 //    fa_table::const_iterator i = tb.begin();
-    this->recogn_matix.reserve(tb.size());
+//    recognition_matix recogn_matix(tb.size());
+    this->recogn_matix.resize(tb.size());
     for (auto row = tb.begin(); row != tb.end(); ++row ){
         int state = row->first;
         recognition_row recog_row;
         for (auto inner_row = row->second.begin();
              inner_row != row->second.end(); ++inner_row ){
-            string symbol = inner_row->first;
-//            int next_state = *i;
+            int_set::iterator i = inner_row->second.begin();
+            int next_state = *i;
+            string symbol = Symbol::MAP(inner_row->first);
 
+            unordered_map<string, unordered_set<char>>::iterator res_sys_i
+                    = Symbol::RESOVLED_SYMBOLS.find(symbol);
+            if (res_sys_i != Symbol::RESOVLED_SYMBOLS.end()){
+                for (auto c : res_sys_i->second) {
+                    recog_row.insert({c, next_state});
+                }
+            }
         }
-        this->recogn_matix.insert(this->recogn_matix.begin(), state, recog_row);
+//        recogn_matix.insert(recogn_matix.begin() + state, recog_row);
+        this->recogn_matix[state] = recog_row;
     }
 
+//    this->recogn_matix(recogn_matix);
 }
 
 int DFATable::getNextState(int current_state, char c){
@@ -140,6 +151,10 @@ DFATable DFA::getTable(){
 
 void DFA::setTable(DFATable table){
     this->table = table;
+}
+
+void DFA::generateRecognitionMatix(){
+    this->table.generateRecognitionMatix();
 }
 
 void DFA::display(){

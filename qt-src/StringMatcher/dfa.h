@@ -66,6 +66,7 @@ public:
     void setTransitions(vector<Transition> transitions);
     DFATable getTable();
     void setTable(DFATable table);
+    void generateRecognitionMatix();
     void display();
     void displayTable();
 

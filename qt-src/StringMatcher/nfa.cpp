@@ -307,9 +307,10 @@ unordered_set<char> NFA::RESOLVE_SYMBOL(string symbol){
     stack<char> opr_stack;
     stack<char> sym_stack;
     // [A-Z], [A-C], [0-9], a, A, ^A,[A-Za-z0-9_]
-    unordered_map<string, string>::const_iterator i = Symbol::SYMBOL_MAPPING.find(symbol);
-    if (i != Symbol::SYMBOL_MAPPING.end())
-        symbol = i->second;
+//    unordered_map<string, string>::const_iterator i = Symbol::SYMBOL_MAPPING.find(symbol);
+//    if (i != Symbol::SYMBOL_MAPPING.end())
+//        symbol = i->second;
+    symbol = Symbol::MAP(symbol);
 
     for (auto ch : symbol){
 
@@ -532,7 +533,7 @@ NFA NFA::FROM_REGEX(string regex){
                     __chars_kept__ += c;
                     new_nfa = new NFA("q0", "q1", __chars_kept__);
                     __NFAs__.push(*new_nfa);
-                    NFA::RESOLVE_SYMBOL(__aux__);
+                    NFA::RESOLVE_SYMBOL(__chars_kept__);
                 }
                 else{
                     __chars_kept__ += c;

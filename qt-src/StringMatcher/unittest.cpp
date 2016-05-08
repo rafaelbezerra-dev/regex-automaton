@@ -6,14 +6,14 @@ void UNIT_TEST::RUN_ALL(){
          << "*    STARTING UNIT TESTS    *"   << endl
          << "*****************************" << endl
          << endl;
-    cout << "TEST: NFA_RESOLVE_SYMBOL... " << endl;
-    UNIT_TEST::NFA_RESOLVE_SYMBOL();
+//    cout << "TEST: NFA_RESOLVE_SYMBOL... " << endl;
+//    UNIT_TEST::NFA_RESOLVE_SYMBOL();
 
 //    cout << "TEST: NFA_SHUNTING_YARD... " << endl;
 //    UNIT_TEST::NFA_SHUNTING_YARD();
 
-//    cout << "TEST: NFA_FROM_REGEX... " << endl;
-//    UNIT_TEST::NFA_FROM_REGEX();
+    cout << "TEST: NFA_FROM_REGEX... " << endl;
+    UNIT_TEST::NFA_FROM_REGEX();
 }
 bool UNIT_TEST::NFA_RESOLVE_SYMBOL(){
 
@@ -150,6 +150,18 @@ bool UNIT_TEST::NFA_FROM_REGEX(){
     cout << "\nDFA" << endl;
     DFA dfa = DFA::FROM_NFA(nfa);
     dfa.display();
+    dfa.generateRecognitionMatix();
+
+//    cout << "\nNEXT STATES FOLLOWING MATIX" << endl;
+//    cout << "0[A] -> " << dfa.getTable().getNextState(0, 'A') << endl;
+//    cout << "0[B] -> " << dfa.getTable().getNextState(0, 'B') << endl;
+//    cout << "0[a] -> " << dfa.getTable().getNextState(0, 'a') << endl;
+//    cout << "1[a] -> " << dfa.getTable().getNextState(1, 'a') << endl;
+//    cout << "1[A] -> " << dfa.getTable().getNextState(1, 'A') << endl;
+//    cout << "1[8] -> " << dfa.getTable().getNextState(1, '8') << endl;
+//    cout << "1[_] -> " << dfa.getTable().getNextState(1, '_') << endl;
+//    cout << "1[;] -> " << dfa.getTable().getNextState(1, ';') << endl;
+
 
 //    src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
 //    Matcher::MATCH(src, dfa);
