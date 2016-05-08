@@ -285,3 +285,376 @@ NFA NFA::ONE_OR_MORE(NFA nfa){
     return res;
 
 }
+
+unordered_set<char> NFA::UNMARSHAL_SYMBOL(string symbol){
+    uint8_t number_of_chars = 128;
+    unordered_set<char> _opr_ = {'[','-',']','\\', '^', '(', ')'};
+    unordered_set<char> _sym_;
+    stack<char> opr_stack;
+    stack<char> sym_stack;
+    // [A-Z], [A-C], [0-9], a, A, ^A,[A-Za-z0-9_]
+
+    for (auto ch : symbol){
+
+        char last_op;
+        if (!opr_stack.empty()) {
+            last_op = opr_stack.top();
+            if (last_op == '\\'){
+                _sym_.insert(ch);
+//                break;
+                continue;
+            }
+        }
+
+        if (_opr_.find(ch) == _opr_.end()){
+            sym_stack.push(ch);
+            if (!opr_stack.empty()) {
+                if (last_op == '[' || last_op == '(' || last_op == ')'){
+                    continue;
+                }
+                else if (last_op == '-'){
+                    opr_stack.pop();
+                    char ch_end = sym_stack.top();
+                    sym_stack.pop();
+                    char ch_start = sym_stack.top();
+                    sym_stack.pop();
+
+                    if (opr_stack.top() != '^')
+                        for (int i = ch_start; i <= ch_end; i++)
+                            _sym_.insert((char)i);
+                    else
+                        for (int i = 0; i < number_of_chars; i++)
+                            if (i < ch_start || i > ch_end)
+                                _sym_.insert((char)i);
+                }
+//                else if (last_op == ']'){
+//                    break;
+//                }
+//                else if (last_op == '^'){
+//                    char c = sym_stack.top();
+//                    for (int i = 0; i < 128; i++)
+//                        if (c != i)
+//                            _sym_.insert((char)i);
+//                    sym_stack.pop();
+//                    break;
+//                }
+            }
+
+        }
+        else{
+            if (ch == ']'){
+                if (!sym_stack.empty()){
+                    unordered_set<char> char_set;
+                    while (!sym_stack.empty()){
+                        char_set.insert(sym_stack.top());
+                        sym_stack.pop();
+                    }
+                    if (opr_stack.top() == '[')
+                        for (auto c : char_set)
+                            _sym_.insert(c);
+                    else
+                        for (int i = 0; i < number_of_chars; i++)
+                            if (char_set.find((char)i) != char_set.end())
+                                _sym_.insert((char)i);
+                }
+                break;
+            }
+            else
+                opr_stack.push(ch);
+        }
+    }
+
+    if (!sym_stack.empty()){
+        char c = sym_stack.top();
+        sym_stack.pop();
+        if (!opr_stack.empty() && opr_stack.top() == '^'){
+            for (int i = 0; i < number_of_chars; i++)
+                if (c != i)
+                    _sym_.insert((char)i);
+        }
+        else
+            _sym_.insert(c);
+    }
+    return _sym_;
+}
+
+vector<char> NFA::SHUNTING_YARD(string regex){
+    // based on https://gist.github.com/gmenard/6161825
+    unordered_map<char, int> __precedence_map__ = {
+        {'(', 1},
+        {'|', 2},
+        {'.', 3}, // explicit concatenation operator
+        {'?', 4},
+        {'*', 4},
+        {'+', 4},
+//        {'^', 5} // uncomment this line to have [^0-9] transformed to [0-9]^
+    };
+    unordered_map<char, int>::const_iterator top_itr, current_itr;
+
+    vector<char> __out__;
+    stack<char> __stack__;
+    string aux;
+
+    for (auto c : regex){
+        if (c == '('){
+            __stack__.push(c);
+        }
+        else if (c == ')'){
+            while (__stack__.top() != '('){
+//                aux = "";
+//                aux += __stack__.top();
+//                __out__.push_back(aux);
+                __out__.push_back(__stack__.top());
+                __stack__.pop();
+            }
+            __stack__.pop();
+        }
+        else{
+            while(!__stack__.empty()){
+                char top = __stack__.top();
+
+                int top_preced = 6,
+                    curr_c_preced = 6;
+
+                top_itr = __precedence_map__.find(top);
+                if (top_itr != __precedence_map__.end())
+                    top_preced = top_itr->second;
+
+                current_itr = __precedence_map__.find(c);
+                if (current_itr != __precedence_map__.end())
+                    curr_c_preced = current_itr->second;
+
+                if (top_preced >= curr_c_preced){
+//                    aux = "";
+//                    aux += __stack__.top();
+//                    __out__.push_back(aux);
+                    __out__.push_back(__stack__.top());
+                    __stack__.pop();
+                }
+                else
+                    break;
+            }
+            __stack__.push(c);
+        }
+    }
+
+    while(!__stack__.empty()){
+//        aux = "";
+//        aux += __stack__.top();
+//        __out__.push_back(aux);
+        __out__.push_back(__stack__.top());
+        __stack__.pop();
+    }
+
+
+    return __out__;
+}
+
+string NFA::SHUNTING_YARD_STRING(string regex){
+    vector<char> v = NFA::SHUNTING_YARD(regex);
+    string __out__ = "";
+
+    for (auto s : v)
+        __out__ += s;
+
+    return __out__;
+}
+
+/*NFA NFA::FROM_REGEX(string regex){
+    //([A-Z])\w+
+
+    NFA nfa;
+    uint8_t __n_chars__ = 128;
+    unordered_set<char> __opr__ = {'[','-',']','\\', '^', '(', ')', '|', '*', '+', '?'};
+    stack<char> opr_stack;
+    stack<char> sym_stack;
+    stack<char> chr_stack;
+    stack<NFA> nfa_stack;
+
+    for (auto c : regex){
+        chr_stack.push(c);
+        if (__opr__.find(c) != __opr__.end())
+            opr_stack.push(c);
+    }
+
+    while(!chr_stack.empty()){
+        char c = chr_stack.top();
+        chr_stack.pop();
+
+        if (__opr__.find(c) == __opr__.end()){
+            //TODO: process symbol
+        } else {
+            if (c == '['){
+            }
+            else if (c == '-'){
+            }
+            else if (c == ']'){
+            }
+            else if (c == '\\'){
+            }
+            else if (c == '^'){
+            }
+            else if (c == '('){
+            }
+            else if (c == ')'){
+            }
+            else if (c == '|'){
+            }
+            else if (c == '*'){
+            }
+            else if (c == '+'){
+            }
+            else if (c == '?'){
+
+            }
+        }
+
+    }
+
+    return nfa;
+}*/
+/*NFA NFA::FROM_REGEX(string regex){
+    //([A-Z])\w+
+
+    NFA nfa;
+    uint8_t __n_chars__ = 128;
+    unordered_set<char> __opr__ = {'[','-',']','\\', '^', '(', ')', '|', '*', '+', '?'};
+    stack<char> opr_stack;
+    stack<string> sym_stack;
+//    stack<char> chr_stack;
+    stack<NFA> nfa_stack;
+    NFA new_nfa;
+
+    for (auto c : regex){
+        sym_stack.push(c);
+        if (__opr__.find(c) != __opr__.end())
+            opr_stack.push(c);
+
+        if (__opr__.find(c) == __opr__.end()){
+            //TODO: process symbol
+
+
+//            string str_symbol = "" + c;
+
+//            if (opr_stack.top() != '[') {
+//                if (opr_stack.top() == '^' || opr_stack.top() == '\\') {
+//                    str_symbol = opr_stack.top() + str_symbol;
+//                    opr_stack.pop();
+//                    sym_stack.pop(); // pop char
+//                    sym_stack.pop(); // pop operator
+//                }
+//                new_nfa = NFA({State("q0"), State("q1")}, 1);
+//                new_nfa.addTransition(0, 1, c);
+//                nfa_stack.push(new_nfa);
+//            }
+
+//            sym_stack.push(str_symbol);
+            if (opr_stack.top() == '|'){
+            }
+        } else {
+            if (c == '['){
+            }
+            else if (c == '-'){
+            }
+            else if (c == ']'){
+            }
+            else if (c == '\\'){
+            }
+            else if (c == '^'){
+            }
+            else if (c == '('){
+            }
+            else if (c == ')'){
+            }
+            else if (c == '*'){
+
+            }
+            else if (c == '+'){
+            }
+            else if (c == '?'){
+
+            }
+        }
+    }
+
+    return nfa;
+}
+
+
+*/
+
+
+NFA NFA::FROM_REGEX(string regex){
+    // (A|a).b*|(c|d) ---> Aa|b*.cd||
+    uint8_t __n_chars__ = 128;
+    string __aux__;
+    unordered_set<char> __opr__ = {'[','-',']','\\', '^', '(', ')', '|', '*', '+', '?', '.'};
+    vector<char> __regx__ = NFA::SHUNTING_YARD(regex);
+    stack<NFA> __NFAs__;
+    NFA *new_nfa;
+
+    for (auto c : __regx__){
+        if (__opr__.find(c) == __opr__.end()){
+            //TODO: process symbol
+            __aux__ = "";
+            __aux__ += c;
+            new_nfa = new NFA({State("q0"), State("q1")}, 1);
+            new_nfa->addTransition(0, 1, __aux__);
+            __NFAs__.push(*new_nfa);
+//            NFA::UNMARSHAL_SYMBOL(__aux__);
+        } else {
+            if (c == '['){
+            }
+            else if (c == '-'){
+            }
+            else if (c == ']'){
+            }
+            else if (c == '\\'){
+            }
+            else if (c == '^'){
+            }
+            else if (c == '('){
+            }
+            else if (c == ')'){
+            }
+            else if (c == '.'){
+                NFA right = __NFAs__.top();
+                __NFAs__.pop();
+                NFA left = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::CONCAT(left, right));
+            }
+            else if (c == '|'){
+                NFA right = __NFAs__.top();
+                __NFAs__.pop();
+                NFA left = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::OR(left, right));
+            }
+            else if (c == '*'){
+                NFA n = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::ZERO_OR_MORE(n));
+            }
+            else if (c == '+'){
+                NFA n = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::ONE_OR_MORE(n));
+            }
+            else if (c == '?'){
+                NFA n = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::ZERO_OR_ONE(n));
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+

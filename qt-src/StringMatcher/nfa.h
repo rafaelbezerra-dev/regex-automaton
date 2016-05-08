@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <stack>
+#include <queue>
 #include <utility>
 
 #include "symbol.h"
@@ -64,6 +65,12 @@ public:
     static NFA ZERO_OR_MORE(NFA nfa);
     static NFA ZERO_OR_ONE(NFA nfa);
     static NFA ONE_OR_MORE(NFA nfa);
+
+
+    static unordered_set<char> UNMARSHAL_SYMBOL(string symbol);
+    static vector<char> SHUNTING_YARD(string regex);
+    static string SHUNTING_YARD_STRING(string regex);
+    static NFA FROM_REGEX(string regex);
 
 
 };

@@ -10,7 +10,8 @@ SOURCES += main.cpp \
     state.cpp \
     dfa.cpp \
     utils.cpp \
-    matcher.cpp
+    matcher.cpp \
+    unittest.cpp
 
 HEADERS += \
     nfa.h \
@@ -19,4 +20,5 @@ HEADERS += \
     state.h \
     dfa.h \
     utils.h \
-    matcher.h
+    matcher.h \
+    unittest.h
