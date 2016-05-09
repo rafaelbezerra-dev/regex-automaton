@@ -39,21 +39,42 @@ void inorder_exp::first_inorder() {
 }
 
 void inorder_exp::second_inorder() {
-    for (vector<string>::iterator it_t = in_order.begin(); it_t != in_order.end()-1; ++it_t) {
-        if (*it_t != "(" &&
-            *it_t != "|" &&
-            *it_t != "." &&
-            *(it_t+1) != ")" &&
-            *(it_t+1) != "|" &&
-            *(it_t+1) != "." &&
-            *(it_t+1) != "+" &&
-            *(it_t+1) != "?" &&
-            *(it_t+1) != "*" ) {
-            in_order.insert(it_t+1, ".");
-        }
-    
-    }
+    vector<string>::iterator it_t=in_order.begin();
+    while(it_t!=in_order.end()-1)
+    {
+                if (*it_t != "(" &&
+                    *it_t != "|" &&
+                    *it_t != "." &&
+                    *(it_t+1) != ")" &&
+                    *(it_t+1) != "|" &&
+                    *(it_t+1) != "." &&
+                    *(it_t+1) != "+" &&
+                    *(it_t+1) != "?" &&
+                    *(it_t+1) != "*" )
+                {
+                    in_order.insert(it_t+1, ".");
+                    it_t=in_order.begin();
+                }
+                else ++it_t;
         
+    }
+//    for (vector<string>::iterator it_t = in_order.begin(); it_t != in_order.end()-1; ++it_t) {
+//        if (*it_t != "(" &&
+//            *it_t != "|" &&
+//            *it_t != "." &&
+//            *(it_t+1) != ")" &&
+//            *(it_t+1) != "|" &&
+//            *(it_t+1) != "." &&
+//            *(it_t+1) != "+" &&
+//            *(it_t+1) != "?" &&
+//            *(it_t+1) != "*" ) {
+//            in_order.insert(it_t+1, ".");
+//        }
+//        for (vector<string>::iterator it_t2 = in_order.begin(); it_t2 != in_order.end(); ++it_t2) cout << *it_t2;
+//        cout<<"  "<<*it_t<<"/"<<*(it_t+1);
+//        cout<<endl;
+//    }
+//    cout<<endl;
 }
 
 
@@ -180,4 +201,7 @@ void inorder_exp::show() {
     for (vector<string>::iterator it = in_order.begin(); it != in_order.end(); ++it)
         cout << *it << " ";
     cout << endl;
+}
+vector<string> inorder_exp::get_inorder() const {
+    return in_order;
 }

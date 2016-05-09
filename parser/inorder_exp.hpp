@@ -34,6 +34,7 @@ public:
     void set_expand(string::iterator it_l, string::iterator it_r);
     void quantifier_expand(string::iterator it_l, string::iterator it_r);
     void show();
+    vector<string> get_inorder() const;
 };
 
 #endif /* inorder_exp_hpp */
