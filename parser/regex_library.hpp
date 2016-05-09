@@ -12,7 +12,6 @@
 #include <iostream>
 #include <set>
 #include <map>
-#include <string>
 using namespace std;
 
 
@@ -24,7 +23,7 @@ using namespace std;
 //operator: (1)+ (2)* (3)?   (4)| (5).
 
 //set[]:
-// .[^\n]
+// .[^\n\r]
 // \w[a-zA-Z0-9_]
 // \W
 // \d[0-9]
@@ -74,6 +73,7 @@ public:
     string::iterator is_escape(string::iterator it);
     string::iterator is_anchor(string::iterator it);
     string::iterator is_quantifier(string::iterator it);
+    const map<string,string>& get_sets() const;
 };
 
 #endif /* regex_library_hpp */
