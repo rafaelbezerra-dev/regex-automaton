@@ -39,42 +39,42 @@ void inorder_exp::first_inorder() {
 }
 
 void inorder_exp::second_inorder() {
-    vector<string>::iterator it_t=in_order.begin();
-    while(it_t!=in_order.end()-1)
-    {
-                if (*it_t != "(" &&
-                    *it_t != "|" &&
-                    *it_t != "." &&
-                    *(it_t+1) != ")" &&
-                    *(it_t+1) != "|" &&
-                    *(it_t+1) != "." &&
-                    *(it_t+1) != "+" &&
-                    *(it_t+1) != "?" &&
-                    *(it_t+1) != "*" )
-                {
-                    in_order.insert(it_t+1, ".");
-                    it_t=in_order.begin();
-                }
-                else ++it_t;
-        
-    }
-//    for (vector<string>::iterator it_t = in_order.begin(); it_t != in_order.end()-1; ++it_t) {
-//        if (*it_t != "(" &&
-//            *it_t != "|" &&
-//            *it_t != "." &&
-//            *(it_t+1) != ")" &&
-//            *(it_t+1) != "|" &&
-//            *(it_t+1) != "." &&
-//            *(it_t+1) != "+" &&
-//            *(it_t+1) != "?" &&
-//            *(it_t+1) != "*" ) {
-//            in_order.insert(it_t+1, ".");
-//        }
-//        for (vector<string>::iterator it_t2 = in_order.begin(); it_t2 != in_order.end(); ++it_t2) cout << *it_t2;
-//        cout<<"  "<<*it_t<<"/"<<*(it_t+1);
-//        cout<<endl;
+//    vector<string>::iterator it_t=in_order.begin();
+//    while(it_t!=in_order.end()-1)
+//    {
+//                if (*it_t != "(" &&
+//                    *it_t != "|" &&
+//                    *it_t != "." &&
+//                    *(it_t+1) != ")" &&
+//                    *(it_t+1) != "|" &&
+//                    *(it_t+1) != "." &&
+//                    *(it_t+1) != "+" &&
+//                    *(it_t+1) != "?" &&
+//                    *(it_t+1) != "*" )
+//                {
+//                    in_order.insert(it_t+1, ".");
+//                    it_t=in_order.begin();
+//                }
+//                else ++it_t;
+//        
 //    }
-//    cout<<endl;
+    vector<string> temp;
+    for (vector<string>::iterator it_t = in_order.begin(); it_t != in_order.end()-1; ++it_t) {
+        temp.push_back(*it_t);
+        if (*it_t != "(" &&
+            *it_t != "|" &&
+            *it_t != "." &&
+            *(it_t+1) != ")" &&
+            *(it_t+1) != "|" &&
+            *(it_t+1) != "." &&
+            *(it_t+1) != "+" &&
+            *(it_t+1) != "?" &&
+            *(it_t+1) != "*" ) {
+            temp.push_back(".");
+        }
+    }
+    temp.push_back(in_order.back());
+    in_order = temp;
 }
 
 
