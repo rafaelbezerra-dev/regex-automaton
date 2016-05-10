@@ -8,16 +8,16 @@
 
 #include "inorder_exp.hpp"
 
+
 inorder_exp::inorder_exp() {
     library = regex_library();
-    itr = reg_exp.begin();
     input();
+    itr = reg_exp.begin();
 }
 void inorder_exp::input() {
     cout << "please input regex:" << endl;
     cin >> reg_exp;
 }
-
 
 void inorder_exp::first_inorder() {
     string::iterator temp_itr;
@@ -28,7 +28,6 @@ void inorder_exp::first_inorder() {
             if (*itr == '(') {
                 parenth_stack.push_back(in_order.end()-in_order.begin()-1);
             }
-            //cout << parenth_stack.back() << endl;
             if (*(itr-1) == ')') {
                 parenth_stack.pop_back();
             }
@@ -107,12 +106,14 @@ string::iterator inorder_exp::split(string::iterator it) {
 
 
 void inorder_exp::push(string::iterator it_l, string::iterator it_r) {
+
     in_order.push_back(reg_exp.substr(it_l-reg_exp.begin(),it_r-it_l));
 }
 
 void inorder_exp::set_expand(string::iterator it_l, string::iterator it_r) {
-    if (*it_l == '[')
+    if (*it_l == '[') {
         push(it_l, it_r);
+    }
     else {
         in_order.push_back(
              library.get_sets().find( reg_exp.substr(it_l-reg_exp.begin(), it_r-it_l) )->second
