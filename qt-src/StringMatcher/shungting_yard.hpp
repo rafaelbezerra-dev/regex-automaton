@@ -22,7 +22,7 @@ private:
     vector<string> stack;
 public:
     Shungting_yard(vector<string> v);
-    void in2post();
+    vector<string> in2post();
     void show();
 };
 

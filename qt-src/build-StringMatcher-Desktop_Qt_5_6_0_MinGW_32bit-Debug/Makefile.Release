@@ -52,9 +52,9 @@ SOURCES       = ..\StringMatcher\main.cpp \
 		..\StringMatcher\utils.cpp \
 		..\StringMatcher\matcher.cpp \
 		..\StringMatcher\unittest.cpp \
-		..\..\parser\inorder_exp.cpp \
-		..\..\parser\regex_library.cpp \
-		..\..\parser\shungting_yard.cpp 
+		..\StringMatcher\inorder_exp.cpp \
+		..\StringMatcher\regex_library.cpp \
+		..\StringMatcher\shungting_yard.cpp 
 OBJECTS       = release/main.o \
 		release/nfa.o \
 		release/symbol.o \
@@ -77,9 +77,9 @@ DIST          =  nfa.h \
 		matcher.h \
 		unittest.h \
 		console_color.h \
-		../../parser/inorder_exp.hpp \
-		../../parser/regex_library.hpp \
-		../../parser/shungting_yard.hpp ..\StringMatcher\main.cpp \
+		inorder_exp.hpp \
+		regex_library.hpp \
+		shungting_yard.hpp ..\StringMatcher\main.cpp \
 		..\StringMatcher\nfa.cpp \
 		..\StringMatcher\symbol.cpp \
 		..\StringMatcher\transition.cpp \
@@ -88,9 +88,9 @@ DIST          =  nfa.h \
 		..\StringMatcher\utils.cpp \
 		..\StringMatcher\matcher.cpp \
 		..\StringMatcher\unittest.cpp \
-		..\..\parser\inorder_exp.cpp \
-		..\..\parser\regex_library.cpp \
-		..\..\parser\shungting_yard.cpp
+		..\StringMatcher\inorder_exp.cpp \
+		..\StringMatcher\regex_library.cpp \
+		..\StringMatcher\shungting_yard.cpp
 QMAKE_TARGET  = StringMatcher
 DESTDIR        = release\ #avoid trailing-slash linebreak
 TARGET         = StringMatcher.exe
@@ -142,11 +142,11 @@ release/main.o: ../StringMatcher/main.cpp ../StringMatcher/dfa.h \
 		../StringMatcher/nfa.h \
 		../StringMatcher/utils.h \
 		../StringMatcher/console_color.h \
+		../StringMatcher/inorder_exp.hpp \
+		../StringMatcher/regex_library.hpp \
+		../StringMatcher/shungting_yard.hpp \
 		../StringMatcher/matcher.h \
-		../StringMatcher/unittest.h \
-		../../parser/inorder_exp.hpp \
-		../../parser/regex_library.hpp \
-		../../parser/shungting_yard.hpp
+		../StringMatcher/unittest.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\main.o ..\StringMatcher\main.cpp
 
 release/nfa.o: ../StringMatcher/nfa.cpp ../StringMatcher/nfa.h \
@@ -154,7 +154,10 @@ release/nfa.o: ../StringMatcher/nfa.cpp ../StringMatcher/nfa.h \
 		../StringMatcher/transition.h \
 		../StringMatcher/state.h \
 		../StringMatcher/utils.h \
-		../StringMatcher/console_color.h
+		../StringMatcher/console_color.h \
+		../StringMatcher/inorder_exp.hpp \
+		../StringMatcher/regex_library.hpp \
+		../StringMatcher/shungting_yard.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\nfa.o ..\StringMatcher\nfa.cpp
 
 release/symbol.o: ../StringMatcher/symbol.cpp ../StringMatcher/symbol.h
@@ -175,7 +178,10 @@ release/dfa.o: ../StringMatcher/dfa.cpp ../StringMatcher/dfa.h \
 		../StringMatcher/state.h \
 		../StringMatcher/nfa.h \
 		../StringMatcher/utils.h \
-		../StringMatcher/console_color.h
+		../StringMatcher/console_color.h \
+		../StringMatcher/inorder_exp.hpp \
+		../StringMatcher/regex_library.hpp \
+		../StringMatcher/shungting_yard.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\dfa.o ..\StringMatcher\dfa.cpp
 
 release/utils.o: ../StringMatcher/utils.cpp ../StringMatcher/utils.h \
@@ -189,7 +195,10 @@ release/matcher.o: ../StringMatcher/matcher.cpp ../StringMatcher/matcher.h \
 		../StringMatcher/state.h \
 		../StringMatcher/nfa.h \
 		../StringMatcher/utils.h \
-		../StringMatcher/console_color.h
+		../StringMatcher/console_color.h \
+		../StringMatcher/inorder_exp.hpp \
+		../StringMatcher/regex_library.hpp \
+		../StringMatcher/shungting_yard.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\matcher.o ..\StringMatcher\matcher.cpp
 
 release/unittest.o: ../StringMatcher/unittest.cpp ../StringMatcher/unittest.h \
@@ -199,22 +208,22 @@ release/unittest.o: ../StringMatcher/unittest.cpp ../StringMatcher/unittest.h \
 		../StringMatcher/state.h \
 		../StringMatcher/utils.h \
 		../StringMatcher/console_color.h \
+		../StringMatcher/inorder_exp.hpp \
+		../StringMatcher/regex_library.hpp \
+		../StringMatcher/shungting_yard.hpp \
 		../StringMatcher/dfa.h \
-		../StringMatcher/matcher.h \
-		../../parser/inorder_exp.hpp \
-		../../parser/regex_library.hpp \
-		../../parser/shungting_yard.hpp
+		../StringMatcher/matcher.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\unittest.o ..\StringMatcher\unittest.cpp
 
-release/inorder_exp.o: ../../parser/inorder_exp.cpp ../../parser/inorder_exp.hpp \
-		../../parser/regex_library.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\inorder_exp.o ..\..\parser\inorder_exp.cpp
+release/inorder_exp.o: ../StringMatcher/inorder_exp.cpp ../StringMatcher/inorder_exp.hpp \
+		../StringMatcher/regex_library.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\inorder_exp.o ..\StringMatcher\inorder_exp.cpp
 
-release/regex_library.o: ../../parser/regex_library.cpp ../../parser/regex_library.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\regex_library.o ..\..\parser\regex_library.cpp
+release/regex_library.o: ../StringMatcher/regex_library.cpp ../StringMatcher/regex_library.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\regex_library.o ..\StringMatcher\regex_library.cpp
 
-release/shungting_yard.o: ../../parser/shungting_yard.cpp ../../parser/shungting_yard.hpp
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\shungting_yard.o ..\..\parser\shungting_yard.cpp
+release/shungting_yard.o: ../StringMatcher/shungting_yard.cpp ../StringMatcher/shungting_yard.hpp
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o release\shungting_yard.o ..\StringMatcher\shungting_yard.cpp
 
 ####### Install
 

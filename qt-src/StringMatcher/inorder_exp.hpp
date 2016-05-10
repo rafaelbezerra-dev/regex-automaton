@@ -24,7 +24,8 @@ private:
     vector<long> parenth_stack;
 public:
     inorder_exp();
-    void input();
+    inorder_exp(string reg_exp);
+//    void input();
     string::iterator split(string::iterator it);
     void push(string::iterator it_l, string::iterator it_r);
     

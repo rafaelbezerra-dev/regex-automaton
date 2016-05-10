@@ -14,9 +14,9 @@
 #include "matcher.h"
 #include "utils.h"
 
-#include "../../parser/inorder_exp.hpp"
-#include "../../parser/shungting_yard.hpp"
-#include "../../parser/regex_library.hpp"
+#include "inorder_exp.hpp"
+#include "shungting_yard.hpp"
+#include "regex_library.hpp"
 
 
 using namespace std;
@@ -35,7 +35,8 @@ public:
     static void NFA_FROM_REGEX();
     static void MATCHER_MATCH_FILE();
 
-    static void NEW_PARSER();
+    static void NEW_PARSER_MATCH_STRING();
+    static void NEW_PARSER_MATCH_FILE();
 
     static void BENCHMARK_SMALL();
     static void BENCHMARK_BIG();

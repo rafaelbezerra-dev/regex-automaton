@@ -16,7 +16,7 @@ Shungting_yard::Shungting_yard(vector<string> v) : inorder_input(v){
     precedence["|"] = 2;
     precedence["."] = 1;
 }
-void Shungting_yard::in2post(){
+vector<string> Shungting_yard::in2post(){
     for(vector<string>::iterator it=inorder_input.begin(); it!=inorder_input.end(); ++it) {
         if (precedence.find(*it) == precedence.end()) { //is operand
             postorder_output.push_back(*it);
@@ -41,6 +41,7 @@ void Shungting_yard::in2post(){
         stack.pop_back();
     }
     
+    return postorder_output;
 }
 
 void Shungting_yard::show(){

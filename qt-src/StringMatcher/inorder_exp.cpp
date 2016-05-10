@@ -11,13 +11,20 @@
 
 inorder_exp::inorder_exp() {
     library = regex_library();
-    input();
+//    input();
     itr = reg_exp.begin();
 }
-void inorder_exp::input() {
-    cout << "please input regex:" << endl;
-    cin >> reg_exp;
+
+inorder_exp::inorder_exp(string reg_exp)
+    : reg_exp(reg_exp){
+    library = regex_library();
+    itr = this->reg_exp.begin();
 }
+
+//void inorder_exp::input() {
+//    cout << "please input regex:" << endl;
+//    cin >> reg_exp;
+//}
 
 void inorder_exp::first_inorder() {
     string::iterator temp_itr;
