@@ -13,15 +13,9 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-//    UNIT_TEST::RUN_ALL();
-//    return 0;
+    UNIT_TEST::RUN_ALL();
+    return 0;
 
-//    if (argc < 5){
-//        cout << endl << green
-//             << "INCORRECT CALL!!!"
-//             << white << endl;
-//        return 1;
-//    }
 
     string file = "",
             regx = "";

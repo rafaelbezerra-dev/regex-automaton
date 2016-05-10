@@ -11,7 +11,10 @@ SOURCES += main.cpp \
     dfa.cpp \
     utils.cpp \
     matcher.cpp \
-    unittest.cpp
+    unittest.cpp \
+    inorder_exp.cpp \
+    regex_library.cpp \
+    shungting_yard.cpp
 
 HEADERS += \
     nfa.h \
@@ -22,4 +25,7 @@ HEADERS += \
     utils.h \
     matcher.h \
     unittest.h \
-    console_color.h
+    console_color.h \
+    inorder_exp.hpp \
+    regex_library.hpp \
+    shungting_yard.hpp

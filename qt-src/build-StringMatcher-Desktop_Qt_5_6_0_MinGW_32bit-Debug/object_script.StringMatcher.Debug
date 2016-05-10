@@ -1,0 +1,14 @@
+INPUT(
+./debug\main.o
+./debug\nfa.o
+./debug\symbol.o
+./debug\transition.o
+./debug\state.o
+./debug\dfa.o
+./debug\utils.o
+./debug\matcher.o
+./debug\unittest.o
+./debug\inorder_exp.o
+./debug\regex_library.o
+./debug\shungting_yard.o
+);

@@ -1,0 +1,14 @@
+INPUT(
+./release\main.o
+./release\nfa.o
+./release\symbol.o
+./release\transition.o
+./release\state.o
+./release\dfa.o
+./release\utils.o
+./release\matcher.o
+./release\unittest.o
+./release\inorder_exp.o
+./release\regex_library.o
+./release\shungting_yard.o
+);

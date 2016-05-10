@@ -13,7 +13,7 @@ int main(int argc, const char * argv[]) {
     inorder_exp i;
     i.first_inorder();
     i.second_inorder();
-    i.show();
+    //i.show();
     Shungting_yard p(i.get_inorder());
     p.in2post();
     p.show();

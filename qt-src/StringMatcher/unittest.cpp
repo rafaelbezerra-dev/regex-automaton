@@ -1,5 +1,17 @@
 #include "unittest.h"
 
+float UNIT_TEST::__get_time__(){
+    clock_t t;
+    int f;
+    t = clock();
+//    printf ("Calculating...\n");
+//    f = frequency_of_primes (99999);
+//    printf ("The number of primes lower than 100,000 is: %d\n",f);
+//    t = clock() - t;
+//    printf ("It took me %d clicks (%f seconds).\n",t,((float)t)/CLOCKS_PER_SEC);
+    return ((float)t)/CLOCKS_PER_SEC;
+}
+
 void UNIT_TEST::RUN_ALL(){
 
     cout << "*****************************" << endl
@@ -18,8 +30,17 @@ void UNIT_TEST::RUN_ALL(){
 //    cout << "\n\nTEST: NFA_FROM_REGEX... " << endl;
 //    UNIT_TEST::NFA_FROM_REGEX();
 
-    cout << "\n\nTEST: NFA_FROM_REGEX2... " << endl;
-    UNIT_TEST::MATCHER_MATCH_FILE();
+//    cout << "\n\nTEST: NFA_FROM_REGEX2... " << endl;
+//    UNIT_TEST::MATCHER_MATCH_FILE();
+
+//    cout << "\n\nTEST: BENCHMARK_SMALL... " << endl;
+//    UNIT_TEST::BENCHMARK_SMALL();
+
+//    cout << "\n\nTEST: BENCHMARK_BIG... " << endl;
+//    UNIT_TEST::BENCHMARK_BIG();
+
+    cout << "\n\nTEST: NEW_PARSER... " << endl;
+    UNIT_TEST::NEW_PARSER();
 }
 
 void UNIT_TEST::CONSTRUCTIONS(){
@@ -251,4 +272,109 @@ void UNIT_TEST::MATCHER_MATCH_FILE(){
     dfa.generateRecognitionMatix();
     Matcher::MATCH_FILE(file, dfa, true);
 //    return true;
+}
+
+void UNIT_TEST::BENCHMARK_SMALL(){
+    string src = "";
+    string file = "C:\\Projects\\Git\\stevens\\regexp-project\\lorem_small.txt";
+    ifstream input(file);
+    for( string line; getline( input, line ); )
+    {
+        src += line + "\n";
+    }
+    float start, end;
+
+    cout << "DEFAULT C++ REGEX LIBRARY" << endl;
+    start = __get_time__();
+
+    regex self_regex("REGULAR EXPRESSIONS", regex_constants::ECMAScript | regex_constants::icase);
+
+    regex word_regex("([A-Z]\\w+)");
+    auto words_begin =
+        sregex_iterator(src.begin(), src.end(), word_regex);
+    auto words_end = sregex_iterator();
+
+    end = __get_time__();
+
+    cout << "Found "
+         << distance(words_begin, words_end)
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+
+    cout << "OUR C++ REGEX LIBRARY" << endl;
+    start = __get_time__();
+
+    NFA nfa = NFA::FROM_REGEX("[A-Z].\\w+");
+    DFA dfa = DFA::FROM_NFA(nfa);
+    dfa.generateRecognitionMatix();
+    vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
+
+    end = __get_time__();
+
+    cout << "Found "
+         << res.size()
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+}
+
+
+void UNIT_TEST::BENCHMARK_BIG(){
+    string src = "";
+    string file = "C:\\Projects\\Git\\stevens\\regexp-project\\lorem_big.txt";
+    ifstream input(file);
+    for( string line; getline( input, line ); )
+    {
+        src += line + "\n";
+    }
+    float start, end;
+
+    cout << "DEFAULT C++ REGEX LIBRARY" << endl;
+    start = __get_time__();
+
+    regex self_regex("REGULAR EXPRESSIONS", regex_constants::ECMAScript | regex_constants::icase);
+
+    regex word_regex("([A-Z]\\w+)");
+    auto words_begin =
+        sregex_iterator(src.begin(), src.end(), word_regex);
+    auto words_end = sregex_iterator();
+
+    end = __get_time__();
+
+    cout << "Found "
+         << distance(words_begin, words_end)
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+
+    cout << "OUR C++ REGEX LIBRARY" << endl;
+    start = __get_time__();
+
+    NFA nfa = NFA::FROM_REGEX("[A-Z].\\w+");
+    DFA dfa = DFA::FROM_NFA(nfa);
+    dfa.generateRecognitionMatix();
+    vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
+
+    end = __get_time__();
+
+    cout << "Found "
+         << res.size()
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+}
+
+void UNIT_TEST::NEW_PARSER(){
+    inorder_exp i;
+    i.first_inorder();
+    i.second_inorder();
+    //i.show();
+    Shungting_yard p(i.get_inorder());
+    p.in2post();
+    p.show();
 }
