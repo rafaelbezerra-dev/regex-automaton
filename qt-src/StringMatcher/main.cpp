@@ -13,25 +13,36 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    UNIT_TEST::RUN_ALL();
-    return 0;
-
-
-    string file = "",
+    string arg = "",
+            file = "",
             regx = "";
+    bool run_unittest = false;
+    float start, end;
 
     string last_arg = "";
     for (int i = 0; i < argc; ++i)
     {
+        arg = argv[i];
 //        cout << "argv[" << i << "]: " <<  << endl;
         if (last_arg == "-r" || last_arg == "--regex" || last_arg == "--regexp"){
-            regx = argv[i];
+            regx = arg;
         }
         else if (last_arg == "-f" || last_arg == "--file" || last_arg == "--input"){
-            file = argv[i];
+            file = arg;
         }
-        last_arg = argv[i];
+
+        if (arg == "-t" || arg == "--tests"){
+            run_unittest = true;
+        }
+
+        last_arg = arg;
     }
+
+    if (run_unittest){
+        UNIT_TEST::RUN_ALL();
+        return 0;
+    }
+
 
     if (file.size() == 0 || regx.size() == 0){
         cout << endl << red
@@ -40,26 +51,26 @@ int main(int argc, char **argv)
         return 1;
     }
 
-
-//    file = "C:\\Projects\\Git\\stevens\\regexp-project\\qt-src\\StringMatcher\\Latin-Lipsum.txt";
-//    regx = "[A-Z].\\w+";
-
     cout << "File: "    << green << file << white << endl;
-    string rgx_postfix = NFA::SHUNTING_YARD_STRING(regx);
-    cout << "Regex: "   << green << regx << white
-         << "\t PostFix: " << rgx_postfix << endl;
+//    string rgx_postfix = NFA::SHUNTING_YARD_STRING(regx);
+    cout << "Regex: "   << green << regx << white << endl;
+//         << "\t PostFix: " << rgx_postfix << endl;
 
-    cout << "\nPRESS ENTER TO CONTINUE...";
-    cin.ignore();
-    cout << endl;
-
-    NFA nfa = NFA::FROM_REGEX(regx);
+    start = Utils::GET_TIME();
+    NFA nfa = NFA::FROM_REGEX_USING_PARSER(regx);
 //    cout << "\nNFA" << endl;
 //    nfa.display();
 //    cout << "\nDFA" << endl;
     DFA dfa = DFA::FROM_NFA(nfa);
 //    dfa.display();
     dfa.generateRecognitionMatix();
+    end = Utils::GET_TIME();
+
+    cout << "\nThe parsing took " << (end - start) << " ms to run."
+         << "\nPRESS ENTER TO CONTINUE...";
+    cin.ignore();
+    cout << endl;
+
     Matcher::MATCH_FILE(file, dfa, true);
 
     return 0;

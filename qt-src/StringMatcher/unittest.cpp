@@ -1,17 +1,5 @@
 #include "unittest.h"
 
-float UNIT_TEST::__get_time__(){
-    clock_t t;
-    int f;
-    t = clock();
-//    printf ("Calculating...\n");
-//    f = frequency_of_primes (99999);
-//    printf ("The number of primes lower than 100,000 is: %d\n",f);
-//    t = clock() - t;
-//    printf ("It took me %d clicks (%f seconds).\n",t,((float)t)/CLOCKS_PER_SEC);
-    return ((float)t)/CLOCKS_PER_SEC;
-}
-
 void UNIT_TEST::RUN_ALL(){
 
     cout << "*****************************" << endl
@@ -288,7 +276,7 @@ void UNIT_TEST::BENCHMARK_SMALL(){
     float start, end;
 
     cout << "DEFAULT C++ REGEX LIBRARY" << endl;
-    start = __get_time__();
+    start = Utils::GET_TIME();
 
     regex self_regex("REGULAR EXPRESSIONS", regex_constants::ECMAScript | regex_constants::icase);
 
@@ -297,7 +285,7 @@ void UNIT_TEST::BENCHMARK_SMALL(){
         sregex_iterator(src.begin(), src.end(), word_regex);
     auto words_end = sregex_iterator();
 
-    end = __get_time__();
+    end = Utils::GET_TIME();
 
     cout << "Found "
          << distance(words_begin, words_end)
@@ -307,7 +295,7 @@ void UNIT_TEST::BENCHMARK_SMALL(){
          << endl;
 
     cout << "OUR C++ REGEX LIBRARY" << endl;
-    start = __get_time__();
+    start = Utils::GET_TIME();
 
 //    NFA nfa = NFA::FROM_REGEX("[A-Z].\\w+");
     NFA nfa = NFA::FROM_REGEX_USING_PARSER("[A-Z]\\w+");
@@ -315,7 +303,7 @@ void UNIT_TEST::BENCHMARK_SMALL(){
     dfa.generateRecognitionMatix();
     vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
 
-    end = __get_time__();
+    end = Utils::GET_TIME();
 
     cout << "Found "
          << res.size()
@@ -337,7 +325,7 @@ void UNIT_TEST::BENCHMARK_BIG(){
     float start, end;
 
     cout << "DEFAULT C++ REGEX LIBRARY" << endl;
-    start = __get_time__();
+    start = Utils::GET_TIME();
 
     regex self_regex("REGULAR EXPRESSIONS", regex_constants::ECMAScript | regex_constants::icase);
 
@@ -346,7 +334,7 @@ void UNIT_TEST::BENCHMARK_BIG(){
         sregex_iterator(src.begin(), src.end(), word_regex);
     auto words_end = sregex_iterator();
 
-    end = __get_time__();
+    end = Utils::GET_TIME();
 
     cout << "Found "
          << distance(words_begin, words_end)
@@ -356,7 +344,7 @@ void UNIT_TEST::BENCHMARK_BIG(){
          << endl;
 
     cout << "OUR C++ REGEX LIBRARY" << endl;
-    start = __get_time__();
+    start = Utils::GET_TIME();
 
 //    NFA nfa = NFA::FROM_REGEX("[A-Z].\\w+");
     NFA nfa = NFA::FROM_REGEX_USING_PARSER("[A-Z]\\w+");
@@ -364,7 +352,7 @@ void UNIT_TEST::BENCHMARK_BIG(){
     dfa.generateRecognitionMatix();
     vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
 
-    end = __get_time__();
+    end = Utils::GET_TIME();
 
     cout << "Found "
          << res.size()

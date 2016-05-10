@@ -7,7 +7,7 @@
 #include <regex>
 //#include <chrono>
 //#include <sys/time.h>
-#include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
+//#include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 
 #include "nfa.h"
 #include "dfa.h"
@@ -27,7 +27,6 @@ class UNIT_TEST
 public:
 //    UnitTest();
 
-    static float __get_time__();
     static void RUN_ALL();
     static void CONSTRUCTIONS();
     static void NFA_RESOLVE_SYMBOL();

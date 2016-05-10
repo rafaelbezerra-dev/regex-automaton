@@ -6,6 +6,7 @@
 #include <map>
 #include <unordered_set>
 #include <unordered_map>
+#include <time.h>       /* clock_t, clock, CLOCKS_PER_SEC */
 
 #include "console_color.h"
 
@@ -21,6 +22,7 @@ public:
     Utils();
     static string TO_STRING(vector<int> v);
     static string TO_STRING(int_set s);
+    static float GET_TIME();
 };
 
 #endif // UTILS_H

@@ -134,16 +134,24 @@ vector<pair<int, int>> Matcher::match(string src){
 
 void Matcher::MATCH_FILE(string file, DFA dfa, bool print_nicely){
     string src = "";
+    float start, end;
     ifstream input(file);
     for( string line; getline( input, line ); )
     {
         src += line + "\n";
     }
 
+    start = Utils::GET_TIME();
     Matcher m = Matcher(dfa);
     vector<pair<int, int>> res = m.match(src);
+    end = Utils::GET_TIME();
     if (print_nicely){
         PRINT_NICELY(src, res);
+        cout << "\n------------------------------------------------\n"
+             << "Time to match against file: "
+             << (end - start)
+             << " ms."
+             << endl << endl;
     }
     else{
         cout << "\n### MATCHED: ###" << endl;

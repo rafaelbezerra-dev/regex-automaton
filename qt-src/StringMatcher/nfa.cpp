@@ -604,7 +604,7 @@ NFA NFA::FROM_REGEX_USING_PARSER(string regex){
     i.second_inorder();
     Shungting_yard p(i.get_inorder());
     vector<string> n2post = p.in2post();
-    p.show();
+//    p.show();
     string __regx__("");
     for (auto x : n2post){
         __regx__ += x;
