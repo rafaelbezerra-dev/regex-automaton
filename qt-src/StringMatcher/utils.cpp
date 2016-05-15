@@ -16,3 +16,9 @@ string Utils::TO_STRING(int_set s){
     return str_to;
 }
 
+
+float Utils::GET_TIME(){
+    clock_t t = clock();
+    return ((float)t)/CLOCKS_PER_SEC;
+}
+

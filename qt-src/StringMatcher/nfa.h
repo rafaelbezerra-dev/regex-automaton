@@ -17,6 +17,10 @@
 #include "state.h"
 #include "utils.h"
 
+#include "inorder_exp.hpp"
+#include "shungting_yard.hpp"
+#include "regex_library.hpp"
+
 using namespace std;
 
 class NFATable
@@ -71,6 +75,7 @@ public:
     static vector<char> SHUNTING_YARD(string regex);
     static string SHUNTING_YARD_STRING(string regex);
     static NFA FROM_REGEX(string regex);
+    static NFA FROM_REGEX_USING_PARSER(string regex);
 
 
 };

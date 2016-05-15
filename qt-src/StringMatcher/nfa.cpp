@@ -598,6 +598,132 @@ NFA NFA::FROM_REGEX(string regex){
     return res;
 }
 
+NFA NFA::FROM_REGEX_USING_PARSER(string regex){
+    inorder_exp i(regex);
+    i.first_inorder();
+    i.second_inorder();
+    Shungting_yard p(i.get_inorder());
+    vector<string> n2post = p.in2post();
+//    p.show();
+    string __regx__("");
+    for (auto x : n2post){
+        __regx__ += x;
+    }
+//    p.show();
+
+    string __aux__;
+    unordered_set<char> __opr__ = {'[','-',']','\\', '^', '(', ')', '|', '*', '+', '?', '.'};
+//    vector<char> __regx__ = NFA::SHUNTING_YARD(regex);
+    stack<NFA> __NFAs__;
+    NFA *new_nfa;
+    bool __keep_chars__ = false;
+    string __chars_kept__ = "";
+
+    for (auto c : __regx__){
+        if (__opr__.find(c) == __opr__.end()){
+            //TODO: process symbo
+            __aux__ = "";
+            __aux__ += c;
+
+            if (__keep_chars__){
+                if (__chars_kept__ == "\\" || __chars_kept__ == "^"){
+                    __aux__ = __chars_kept__ + __aux__;
+                    __keep_chars__ = false;
+                }
+
+                __chars_kept__ += c;
+            }
+
+            if (!__keep_chars__){
+                new_nfa = new NFA("q0", "q1", __aux__);
+                __NFAs__.push(*new_nfa);
+                NFA::RESOLVE_SYMBOL(__aux__);
+            }
+
+        } else {
+            if (c == '['){
+                if (!__keep_chars__){
+                    __keep_chars__ = true;
+                    __chars_kept__ = "[";
+                }
+                else{
+                    __chars_kept__ += c;
+                }
+            }
+            else if (c == '-'){
+                __chars_kept__ += c;
+            }
+            else if (c == ']'){
+                if (__keep_chars__){
+                    __keep_chars__ = false;
+                    __chars_kept__ += c;
+                    new_nfa = new NFA("q0", "q1", __chars_kept__);
+                    __NFAs__.push(*new_nfa);
+                    NFA::RESOLVE_SYMBOL(__chars_kept__);
+                }
+                else{
+                    __chars_kept__ += c;
+                }
+
+            }
+            else if (c == '\\'){
+                if (!__keep_chars__){
+                    __keep_chars__ = true;
+                    __chars_kept__ = "\\";
+                }
+                else{
+                    __chars_kept__ += c;
+                }
+            }
+            else if (c == '^'){
+                if (!__keep_chars__){
+                    __keep_chars__ = true;
+                    __chars_kept__ = "^";
+                }
+                else{
+                    __chars_kept__ += c;
+                }
+            }
+            else if (c == '('){
+            }
+            else if (c == ')'){
+            }
+            else if (c == '.'){
+                NFA right = __NFAs__.top();
+                __NFAs__.pop();
+                NFA left = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::CONCAT(left, right));
+            }
+            else if (c == '|'){
+                NFA right = __NFAs__.top();
+                __NFAs__.pop();
+                NFA left = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::OR(left, right));
+            }
+            else if (c == '*'){
+                NFA n = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::ZERO_OR_MORE(n));
+            }
+            else if (c == '+'){
+                NFA n = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::ONE_OR_MORE(n));
+            }
+            else if (c == '?'){
+                NFA n = __NFAs__.top();
+                __NFAs__.pop();
+                __NFAs__.push(NFA::ZERO_OR_ONE(n));
+            }
+        }
+    }
+
+    NFA res = __NFAs__.top();
+    return res;
+}
+
 
 
 

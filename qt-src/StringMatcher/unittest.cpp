@@ -18,8 +18,20 @@ void UNIT_TEST::RUN_ALL(){
 //    cout << "\n\nTEST: NFA_FROM_REGEX... " << endl;
 //    UNIT_TEST::NFA_FROM_REGEX();
 
-    cout << "\n\nTEST: NFA_FROM_REGEX2... " << endl;
-    UNIT_TEST::MATCHER_MATCH_FILE();
+//    cout << "\n\nTEST: NFA_FROM_REGEX2... " << endl;
+//    UNIT_TEST::MATCHER_MATCH_FILE();
+
+    cout << "\n\nTEST: BENCHMARK_SMALL... " << endl;
+    UNIT_TEST::BENCHMARK_SMALL();
+
+    cout << "\n\nTEST: BENCHMARK_BIG... " << endl;
+    UNIT_TEST::BENCHMARK_BIG();
+
+//    cout << "\n\nTEST: NEW_PARSER_MATCH_STRING... " << endl;
+//    UNIT_TEST::NEW_PARSER_MATCH_STRING();
+
+//    cout << "\n\nTEST: NEW_PARSER_MATCH_FILE... " << endl;
+//    UNIT_TEST::NEW_PARSER_MATCH_FILE();
 }
 
 void UNIT_TEST::CONSTRUCTIONS(){
@@ -201,8 +213,8 @@ void UNIT_TEST::NFA_FROM_REGEX(){
 //    string rgx = "(A|a).b*|(c|d)";
 //    rgx = "r.a.f.a.e.l";
 //    rgx = "a.b+";
-    rgx = "(a.a|b.b).a*";
-//    rgx = "[A-Z].\\w+";
+//    rgx = "(a.a|b.b).a*";
+    rgx = "[A-Z].\\w+";
 
 
     cout << "Regex: " << rgx;
@@ -251,4 +263,150 @@ void UNIT_TEST::MATCHER_MATCH_FILE(){
     dfa.generateRecognitionMatix();
     Matcher::MATCH_FILE(file, dfa, true);
 //    return true;
+}
+
+void UNIT_TEST::BENCHMARK_SMALL(){
+    string src = "";
+    string file = "C:\\Projects\\Git\\stevens\\regexp-project\\lorem_small.txt";
+    ifstream input(file);
+    for( string line; getline( input, line ); )
+    {
+        src += line + "\n";
+    }
+    float start, end;
+
+    cout << "DEFAULT C++ REGEX LIBRARY" << endl;
+    start = Utils::GET_TIME();
+
+    regex self_regex("REGULAR EXPRESSIONS", regex_constants::ECMAScript | regex_constants::icase);
+
+    regex word_regex("([A-Z]\\w+)");
+    auto words_begin =
+        sregex_iterator(src.begin(), src.end(), word_regex);
+    auto words_end = sregex_iterator();
+
+    end = Utils::GET_TIME();
+
+    cout << "Found "
+         << distance(words_begin, words_end)
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+
+    cout << "OUR C++ REGEX LIBRARY" << endl;
+    start = Utils::GET_TIME();
+
+//    NFA nfa = NFA::FROM_REGEX("[A-Z].\\w+");
+    NFA nfa = NFA::FROM_REGEX_USING_PARSER("[A-Z]\\w+");
+    DFA dfa = DFA::FROM_NFA(nfa);
+    dfa.generateRecognitionMatix();
+    vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
+
+    end = Utils::GET_TIME();
+
+    cout << "Found "
+         << res.size()
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+}
+
+
+void UNIT_TEST::BENCHMARK_BIG(){
+    string src = "";
+    string file = "C:\\Projects\\Git\\stevens\\regexp-project\\lorem_big.txt";
+    ifstream input(file);
+    for( string line; getline( input, line ); )
+    {
+        src += line + "\n";
+    }
+    float start, end;
+
+    cout << "DEFAULT C++ REGEX LIBRARY" << endl;
+    start = Utils::GET_TIME();
+
+    regex self_regex("REGULAR EXPRESSIONS", regex_constants::ECMAScript | regex_constants::icase);
+
+    regex word_regex("([A-Z]\\w+)");
+    auto words_begin =
+        sregex_iterator(src.begin(), src.end(), word_regex);
+    auto words_end = sregex_iterator();
+
+    end = Utils::GET_TIME();
+
+    cout << "Found "
+         << distance(words_begin, words_end)
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+
+    cout << "OUR C++ REGEX LIBRARY" << endl;
+    start = Utils::GET_TIME();
+
+//    NFA nfa = NFA::FROM_REGEX("[A-Z].\\w+");
+    NFA nfa = NFA::FROM_REGEX_USING_PARSER("[A-Z]\\w+");
+    DFA dfa = DFA::FROM_NFA(nfa);
+    dfa.generateRecognitionMatix();
+    vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
+
+    end = Utils::GET_TIME();
+
+    cout << "Found "
+         << res.size()
+         << " words in "
+         << (end - start)
+         << " ms"
+         << endl;
+}
+
+void UNIT_TEST::NEW_PARSER_MATCH_STRING(){
+    string src;
+    string rgx;
+    rgx = "((aa)|(bb))a*";
+//    rgx = "[A-Z]\\w+";
+
+
+    cout << "Regex: " << rgx << endl;
+//    string rgx_postfix = NFA::SHUNTING_YARD_STRING(rgx);
+//    cout << "\t PostFix: " << rgx_postfix << endl;
+    NFA nfa = NFA::FROM_REGEX_USING_PARSER(rgx);
+    cout << "\nNFA" << endl;
+    nfa.display();
+    cout << "\nDFA" << endl;
+    DFA dfa = DFA::FROM_NFA(nfa);
+    dfa.display();
+    dfa.generateRecognitionMatix();
+
+    src = "babaaaaaaabbaaabbbaabbbbbbbbaaabababaaa";
+    vector<pair<int, int>> res = Matcher::MATCH_STRING(src, dfa);
+    Matcher::PRINT_NICELY(src, res);
+    cout << "\n### MATCHED: ###" << endl;
+    for (auto p : res){
+        int count = p.second - p.first + 1;
+        cout << src.substr(p.first, count)
+             << "[" << p.first + 1<< ", " << p.second + 1<< "]"
+             << endl;
+    }
+}
+
+void UNIT_TEST::NEW_PARSER_MATCH_FILE(){
+    string file = "C:\\Projects\\Git\\stevens\\regexp-project\\lorem_small.txt";
+    string rgx = "[A-Z]\\w+";
+
+    cout << "File: " << file;
+    cout << "Regex: " << rgx;
+
+//    string rgx_postfix = NFA::SHUNTING_YARD_STRING(rgx);
+//    cout << "\t PostFix: " << rgx_postfix << endl;
+    NFA nfa = NFA::FROM_REGEX_USING_PARSER(rgx);
+//    cout << "\nNFA" << endl;
+//    nfa.display();
+    cout << "\nDFA" << endl;
+    DFA dfa = DFA::FROM_NFA(nfa);
+//    dfa.display();
+    dfa.generateRecognitionMatix();
+    Matcher::MATCH_FILE(file, dfa, true);
 }

@@ -15,7 +15,7 @@ regex_library::regex_library() {
     oper = set<char>(op, op+4);
     escape = set<char>(es,es+24);
     sets = set<char>(se, se+6);
-    sets_map["."]="[^\n]";
+    sets_map["."]="[^\n\r]";
     sets_map["\\w"]="[a-zA-Z0-9_]";
     sets_map["\\W"]="[^a-zA-Z0-9_]";
     sets_map["\\d"]="[0-9]";
@@ -26,7 +26,7 @@ regex_library::regex_library() {
 
 string::iterator regex_library::is_operator(string::iterator it){
     if (oper.find(*it) != oper.end()) {
-        return ++it;
+        ++it;
     }
     return it;
 };
@@ -66,8 +66,12 @@ string::iterator regex_library::is_anchor(string::iterator it) {
 }
 string::iterator regex_library::is_quantifier(string::iterator it) {
     if (*it == '{') {
-        while (*(it++) != ')');
+        while (*(it++) != '}');
     }
     return it;
 
+}
+
+const map<string,string>& regex_library::get_sets() const {
+    return sets_map;
 }
